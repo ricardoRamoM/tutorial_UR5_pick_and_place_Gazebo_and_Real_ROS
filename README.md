@@ -1597,91 +1597,60 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
     
 
 ### 18) Ajustar URDFs para visualización correcta del gripper
-
-    (Antes: Realizar ajustes para que se visualice correctamente el gripper)
-
-    Estos pasos corrigen errores comunes relacionados con el uso del plugin y la configuración de los *joints* del gripper Robotiq 85.
+Estos pasos corrigen errores comunes relacionados con el uso del plugin y la configuración de los *joints* del gripper Robotiq 85. Realizar ajustes para que se visualice correctamente el gripper.
 
 ---
-Reemplazar plugin incorrecto en archivos URDF
+Reemplazar plugin incorrecto en archivos URDF. 
+- Para ello abre y edita los siguientes archivos:
 
-Abre y edita los siguientes archivos:
+    - /home/gazebo-ros/catkin_ws/src/ur_gripper_moveit_config/config/gazebo_ur5_robot.urdf
+    - /home/gazebo-ros/catkin_ws/src/robotiq_gripper/urdf/robotiq_85_gripper.transmission.xacro
 
-    - /home/gazebo-ros/catkin_ws/src/ur_gripper_moveit_config/config/gazebo_ur5_robot.urdf`
-    - /home/gazebo-ros/catkin_ws/src/robotiq_gripper/urdf/robotiq_85_gripper.transmission.xacro`
-
-### Cambios a realizar:
-Busca y elimina todas las instancias del siguiente plugin incorrecto:
-
+- Busca y elimina todas las instancias del siguiente plugin incorrecto:
 
     libroboticsgroup_upatras_gazebo_mimic_joint_plugin
 
-Y reemplázalas por el plugin correcto:
+- Y reemplázalas por el plugin correcto:
 
     libroboticsgroup_gazebo_mimic_joint_plugin
 
-Abre y edita los siguientes archivos:
+- Abre y edita los siguientes archivos:
 
-    /home/gazebo-ros/catkin_ws/src/ur_gripper_moveit_config/config/gazebo_ur5_robot.urdf
+    - /home/gazebo-ros/catkin_ws/src/ur_gripper_moveit_config/config/gazebo_ur5_robot.urdf
+    - /home/gazebo-ros/catkin_ws/src/robotiq_gripper/urdf/robotiq_85_gripper.urdf.xacro
 
-    /home/gazebo-ros/catkin_ws/src/robotiq_gripper/urdf/robotiq_85_gripper.urdf.xacro
+- Busca las líneas que definen los siguientes joints:
 
-Cambios a realizar:
-Busca las líneas que definen los siguientes joints:
+        <joint name="robotiq_85_left_finger_joint" type="continuous">
+        <joint name="${prefix}robotiq_85_left_finger_joint" type="continuous">
+        <joint name="robotiq_85_right_finger_joint" type="continuous">
+        <joint name="${prefix}robotiq_85_right_finger_joint" type="continuous">
 
-    <joint name="robotiq_85_left_finger_joint" type="continuous">
-    <joint name="${prefix}robotiq_85_left_finger_joint" type="continuous">
-    <joint name="robotiq_85_right_finger_joint" type="continuous">
-    <joint name="${prefix}robotiq_85_right_finger_joint" type="continuous">
+- Y cámbialas a:
 
-Y cámbialas a:
+        <joint name="robotiq_85_left_finger_joint" type="fixed">
+        <joint name="${prefix}robotiq_85_left_finger_joint" type="fixed">
+        <joint name="robotiq_85_right_finger_joint" type="fixed">
+        <joint name="${prefix}robotiq_85_right_finger_joint" type="fixed">
 
-    <joint name="robotiq_85_left_finger_joint" type="fixed">
-    <joint name="${prefix}robotiq_85_left_finger_joint" type="fixed">
-    <joint name="robotiq_85_right_finger_joint" type="fixed">
-    <joint name="${prefix}robotiq_85_right_finger_joint" type="fixed">
+Esto evitará problemas con la simulación al corregir definiciones erróneas en los dedos del gripper. Finalmente, compilamos los cambios en la terminal:
 
-✅ Esto evitará problemas con la simulación al corregir definiciones erróneas en los dedos del gripper.
-
-Compilar cambios:
-
-cd ~/catkin_ws
-catkin_make
+    cd ~/catkin_ws_1
+    catkin_make
 
 
 ### 19) Crear archivo de controladores con soporte para el gripper
-
-    (Antes: Crear nuevo archivo controllers.yaml con gripper incluido)
-
-### 20) Lanzar UR5 con gripper en Gazebo
-
-    (Antes: Crear nuevo launch file para Gazebo con gripper)
-
-### 21) Lanzar UR5 con gripper en MoveIt y RViz
-
-    (Antes: Crear nuevo launch file para MoveIt con RViz y gripper)
-
-### 22) Corregir estados predefinidos del gripper en SRDF
-
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-### 
-### 25. Ajustes para visualizar correctamente el Gripper 🛠️🤖
-
-
-### 26. Añadir configuración para el Gripper 🦾📄
 
 Ahora crearás un nuevo archivo de configuración para controlar el gripper **Robotiq 85** junto con el UR5.
 
 ---
 
-Duplicar archivo de controladores
+- Haz una copia del archivo actual de controladores:
 
-Haz una copia del archivo actual de controladores:
+    cd ~/catkin_ws/src/ur5_v1/config
+    cp ur5_controllers.yaml ur5_gripper_controllers.yaml
 
-cd ~/catkin_ws/src/ur5_v5/config
-cp ur5_controllers.yaml ur5_gripper_controllers.yaml
-
-Abre ur5_gripper_controllers.yaml y añade al final del archivo el siguiente bloque de código:
+- Abre ur5_gripper_controllers.yaml y añade al final del archivo el siguiente bloque de código:
 
     gripper_controller:
     type: position_controllers/JointTrajectoryController
@@ -1697,51 +1666,58 @@ Abre ur5_gripper_controllers.yaml y añade al final del archivo el siguiente blo
     state_publish_rate:  25
     action_monitor_rate: 10
 
-✅ Con esto ya tienes el controlador del gripper configurado.
-Este bloque define una trayectoria controlada para el robotiq_85_left_knuckle_joint, permitiendo el control básico de apertura y cierre del gripper en simulación.
+Con esto ya tienes el controlador del gripper configurado.
+Este bloque define una trayectoria controlada para el robotiq_85_left_knuckle_joint, permitiendo el control básico de apertura y cierre del gripper en simulación.    
 
-### 27. Crear nuevo archivo Launch para el Gripper en Gazebo 🦾🚀
+
+### 20) Nuevo archivo Launch UR5 con gripper en Gazebo
 
 Vamos a generar un nuevo `launch` que cargue el modelo del UR5 con el **gripper Robotiq 85** en Gazebo.
 
 ---
 
-Copiar archivo base
+- Ubícate en la carpeta de `launch` de tu paquete y crea una copia del archivo existente:
 
-Ubícate en la carpeta de `launch` de tu paquete y crea una copia del archivo existente:
+    cd ~/catkin_ws/src/ur5_v1/launch
+    cp ur5_gazebo_2.launch ur5_gripper_gazebo_1.launch
 
-cd ~/catkin_ws/src/ur5_v5/launch
-cp ur5_gazebo_2.launch ur5_gripper_gazebo_1.launch
+- Cambiar el archivo .xacro (línea 5)
+    
+    De:
 
-Cambiar el archivo .xacro (línea 5)
-De:
-    <param name="robot_description" command="$(find xacro)/xacro '$(find ur5_v5)/urdf/ur5_5.xacro'" />
+        <param name="robot_description" command="$(find xacro)/xacro '$(find ur5_v1)/urdf/ur5_1.xacro'" />
 
-A:
-    <param name="robot_description" command="$(find xacro)/xacro '$(find ur5_v5)/urdf/ur5_5_gripper.xacro'" />
+    A:
 
-Cambiar el archivo de controladores (línea 32)
+        <param name="robot_description" command="$(find xacro)/xacro '$(find ur5_v1)/urdf/ur5_1_gripper.xacro'" />
 
-    <rosparam file="$(find ur5_v5)/config/ur5_controllers.yaml" command="load"/>
+-Cambiar el archivo de controladores (línea 32), poner esta línea: 
 
-Añadir el controlador del gripper a los args
-De:
-    args="joint_state_controller 
-    eff_joint_traj_controller 
-    --timeout 60" />
-A:
-    args="joint_state_controller 
-    eff_joint_traj_controller 
-    gripper_controller 
-    --timeout 60" />
+    <rosparam file="$(find ur5_v1)/config/ur5_controllers.yaml" command="load"/>
 
-Código final del archivo ur5_gripper_gazebo_1.launch
+- Añadir el controlador del gripper a los args
+    
+    De:
+
+        args="joint_state_controller 
+        eff_joint_traj_controller 
+        --timeout 60" />
+
+    A:
+
+        args="joint_state_controller 
+        eff_joint_traj_controller 
+        gripper_controller 
+        --timeout 60" />
+
+
+Aqui está el código final del archivo ur5_gripper_gazebo_1.launch
 
     <?xml version="1.0"?>
     <launch>
 
         <!-- Cargar el modelo UR5 -->
-        <param name="robot_description" command="$(find xacro)/xacro '$(find ur5_v5)/urdf/ur5_5_gripper.xacro'" /> 
+        <param name="robot_description" command="$(find xacro)/xacro '$(find ur5_v1)/urdf/ur5_1_gripper.xacro'" /> 
     
         <!--Spawn Robot in Gazebo-->
         <arg name="x" default="0" />
@@ -1749,7 +1725,7 @@ Código final del archivo ur5_gripper_gazebo_1.launch
         <arg name="z" default="1.01" />
 
         <!-- put world file as argument-->
-        <arg name="world_file" default = "$(find ur5_v5)/worlds/my_custom_world.world" />
+        <arg name="world_file" default = "$(find ur5_v1)/worlds/my_custom_world.world" />
 
         <!-- Lanzar Gazebo con tu mundo -->
         <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -1766,7 +1742,7 @@ Código final del archivo ur5_gripper_gazebo_1.launch
         <node name="spawn_the_robot" pkg="gazebo_ros" type="spawn_model"  output="screen" args="-urdf -param robot_description -model ur5 -x $(arg x) -y $(arg y) -z $(arg z)" />  
 
         <!-- Controladores -->
-        <rosparam file="$(find ur5_v5)/config/ur5_gripper_controllers.yaml" command="load"/>
+        <rosparam file="$(find ur5_v1)/config/ur5_gripper_controllers.yaml" command="load"/>
     
         <node name="controller_spawner" pkg="controller_manager" type="spawner"
         args="joint_state_controller 
@@ -1775,124 +1751,125 @@ Código final del archivo ur5_gripper_gazebo_1.launch
         --timeout 60" />
         
         <!-- Postura inicial -->
-        <node name="set_initial_pose" pkg="ur5_v5" type="ur5_set_initial_pose.py" output="screen"/>
+        <node name="set_initial_pose" pkg="ur5_v1" type="ur5_set_initial_pose.py" output="screen"/>
 
-    </launch>
+    </launch>    
 
-### 28. Crear nuevo Launch File para MoveIt con el Gripper en RViz 🦾📦
+### 21) Crear nuevo Launch para lanzar UR5 con gripper en MoveIt y RViz
 
 Este archivo permitirá levantar **MoveIt** junto con **RViz** y tu configuración personalizada con el **gripper Robotiq 85**.
 
 ---
 
-Copiar archivo base
+- Copiar archivo base
 
-cd ~/catkin_ws/src/ur5_v5/launch
-cp ur5_moveit_with_rviz_2.launch ur5_gripper_moveit_with_rviz_1.launch
+    cd ~/catkin_ws_1/src/ur5_v1/launch
+    cp ur5_moveit_with_rviz_2.launch ur5_gripper_moveit_with_rviz_1.launch
 
-Modificar archivo .launch
-Cambiar la carpeta del paquete de configuración de MoveIt
-De:
-    <include file="$(find ur5_moveit_config)/launch/move_group.launch">
-A:
-    <include file="$(find ur_gripper_moveit_config)/launch/move_group.launch">
+- Modificar archivo .launch. Cambiar la carpeta del paquete de configuración de MoveIt
 
-Código final del archivo ur5_gripper_moveit_with_rviz_1.launch
+    De:
 
-    <launch>
-    <arg name="sim" default="true" />
-    <arg name="debug" default="false" />
+        <include file="$(find ur5_moveit_config)/launch/move_group.launch">
+    
+    A:
 
-    <!-- Remapea trajectory controller para Gazebo -->
-    <remap if="$(arg sim)" from="/scaled_pos_joint_traj_controller/follow_joint_trajectory" to="/eff_joint_traj_controller/follow_joint_trajectory"/>
+        <include file="$(find ur_gripper_moveit_config)/launch/move_group.launch">
 
-    <!-- Lanza MoveIt con la configuración hecha y ubicada en ur_gripper_moveit_config -->
-    <include file="$(find ur_gripper_moveit_config)/launch/move_group.launch">
-        <arg name="debug" value="$(arg debug)" />
-    </include>
 
-    <!-- Lanza RViz con la configuración visual guardada -->
-    <node name="rviz" pkg="rviz" type="rviz" output="screen"
-            args="-d $(find ur5_v5)/config/config.rviz" />
 
-    <!--______________________________________________________________________-->
-    <!-- Nodo RPY en radianes -->
-    <node name="rpy_marker_rad" pkg="ur5_v5" type="rpy_marker_rad.py" output="screen">
-        <param name="reference_frame" value="base_link"/>
-        <param name="target_frame" value="tool0"/>
-    </node>
+- El código final del archivo ur5_gripper_moveit_with_rviz_1.launch es este: 
 
-    <!-- Nodo RPY en grados -->
-    <node name="rpy_marker_deg" pkg="ur5_v5" type="rpy_marker_deg.py" output="screen">
-        <param name="reference_frame" value="base_link"/>
-        <param name="target_frame" value="tool0"/>
-    </node>
+        <launch>
+        <arg name="sim" default="true" />
+        <arg name="debug" default="false" />
 
-    <!-- Nodo joint_state_marker_rad -->
-    <node name="joint_state_marker_rad" pkg="ur5_v5" type="joint_state_marker_rad.py" output="screen" />
+        <!-- Remapea trajectory controller para Gazebo -->
+        <remap if="$(arg sim)" from="/scaled_pos_joint_traj_controller/follow_joint_trajectory" to="/eff_joint_traj_controller/follow_joint_trajectory"/>
 
-    <!-- Nodo joint_state_marker_deg -->
-    <node name="joint_state_marker_deg" pkg="ur5_v5" type="joint_state_marker_deg.py" output="screen" />
+        <!-- Lanza MoveIt con la configuración hecha y ubicada en ur_gripper_moveit_config -->
+        <include file="$(find ur_gripper_moveit_config)/launch/move_group.launch">
+            <arg name="debug" value="$(arg debug)" />
+        </include>
 
-    </launch>
+        <!-- Lanza RViz con la configuración visual guardada -->
+        <node name="rviz" pkg="rviz" type="rviz" output="screen"
+                args="-d $(find ur5_v1)/config/config.rviz" />
 
-### 29.  Ajustar los *Group States* de la garra en SRDF (abrir/cerrar)
+        <!--______________________________________________________________________-->
+        <!-- Nodo RPY en radianes -->
+        <node name="rpy_marker_rad" pkg="ur5_v1" type="rpy_marker_rad.py" output="screen">
+            <param name="reference_frame" value="base_link"/>
+            <param name="target_frame" value="tool0"/>
+        </node>
+
+        <!-- Nodo RPY en grados -->
+        <node name="rpy_marker_deg" pkg="ur5_v1" type="rpy_marker_deg.py" output="screen">
+            <param name="reference_frame" value="base_link"/>
+            <param name="target_frame" value="tool0"/>
+        </node>
+
+        <!-- Nodo joint_state_marker_rad -->
+        <node name="joint_state_marker_rad" pkg="ur5_v1" type="joint_state_marker_rad.py" output="screen" />
+
+        <!-- Nodo joint_state_marker_deg -->
+        <node name="joint_state_marker_deg" pkg="ur5_v1" type="joint_state_marker_deg.py" output="screen" />
+
+        </launch>
+
+### 22) Corregir estados predefinidos del gripper en SRDF
 
 Vamos a simplificar los estados `open` y `close` de la garra eliminando los *joints* que no se usan, y dejar solo el que controla directamente el movimiento útil: `robotiq_85_left_knuckle_joint`.
 
 ---
 
-Archivo a editar
+- Abrir el archivo: 
 
-/home/gazebo-ros/catkin_ws/src/ur_gripper_moveit_config/config/ur5_with_gripper.srdf
+    /home/gazebo-ros/catkin_ws/src/ur_gripper_moveit_config/config/ur5_with_gripper.srdf
 
-Reemplazar el bloque actual:
+- Reemplazar el bloque actual:
 
-    <group_state name="open" group="gripper">
-        <joint name="robotiq_85_left_finger_joint" value="0"/>
-        <joint name="robotiq_85_left_knuckle_joint" value="0"/>
-        <joint name="robotiq_85_right_finger_joint" value="0"/>
-    </group_state>
-    <group_state name="close" group="gripper">
-        <joint name="robotiq_85_left_finger_joint" value="0"/>
-        <joint name="robotiq_85_left_knuckle_joint" value="0.803"/>
-        <joint name="robotiq_85_right_finger_joint" value="0"/>
-    </group_state>
+        <group_state name="open" group="gripper">
+            <joint name="robotiq_85_left_finger_joint" value="0"/>
+            <joint name="robotiq_85_left_knuckle_joint" value="0"/>
+            <joint name="robotiq_85_right_finger_joint" value="0"/>
+        </group_state>
+        <group_state name="close" group="gripper">
+            <joint name="robotiq_85_left_finger_joint" value="0"/>
+            <joint name="robotiq_85_left_knuckle_joint" value="0.803"/>
+            <joint name="robotiq_85_right_finger_joint" value="0"/>
+        </group_state>
 
-Reemplazar por:
+- Reemplazar por:
 
-    <group_state name="open" group="gripper">
-        <joint name="robotiq_85_left_knuckle_joint" value="0"/>
-    </group_state>
-    <group_state name="close" group="gripper">
-        <joint name="robotiq_85_left_knuckle_joint" value="0.803"/>
-    </group_state>
+        <group_state name="open" group="gripper">
+            <joint name="robotiq_85_left_knuckle_joint" value="0"/>
+        </group_state>
+        <group_state name="close" group="gripper">
+            <joint name="robotiq_85_left_knuckle_joint" value="0.803"/>
+        </group_state>
 
-#### 30. Cambiar la rotación inicial del *gripper* en `eef.xacro`
+### 23) Ajustar rotación inicial del gripper en eef.xacro
 
 Para ajustar la orientación con la que el *gripper* se monta inicialmente al UR5, es necesario modificar los ángulos **RPY** (roll, pitch, yaw) directamente en el archivo `eef.xacro`.
 
 ---
 
-Archivo a editar
+- Archivo a editar: 
 
-~/catkin_ws/src/ur5_v5/urdf/eef.xacro
+    ~/catkin_ws/src/ur5_v1/urdf/eef.xacro
 
-Busca la línea que se encarga del posicionamiento y orientación inicial del gripper:
+- Busca la línea que se encarga del posicionamiento y orientación inicial del gripper:
 
-    <origin xyz="0 0 0" rpy="0 -1.57 1.57" /> <!-- Posición inicial del gripper -->
+        <origin xyz="0 0 0" rpy="0 -1.57 1.57" /> <!-- Posición inicial del gripper -->
 
-Solo modifica los valores de rpy (en radianes) para rotar el gripper como desees.
+- Solo modifica los valores de rpy (en radianes) para rotar el gripper como desees. Por ejemplo:
+    - Rotación roll 90° → 1.57 0 0
+    - Rotación pitch -90° → 0 -1.57 0
 
-Por ejemplo:
+- Combina según tu necesidad con: <origin xyz="..." rpy="..." />
 
-Rotación roll 90° → 1.57 0 0
-
-Rotación pitch -90° → 0 -1.57 0
-
-Combina según tu necesidad con: <origin xyz="..." rpy="..." />
-
-### 31. 🚀 Crear archivo `launch` para lanzar el UR5 con *gripper* y los objetos automáticamente
+### 24) Crear launch file para spawn del UR5 con gripper y objetos en Gazebo
 
 ---
 
@@ -1901,32 +1878,41 @@ Unificar el lanzamiento del robot con gripper y los objetos de simulación en un
 
 ---
 
-Ruta del nuevo archivo
+- Ruta del nuevo archivo:
 
-~/catkin_ws/src/ur5_v5/launch/ur5_gripper_gazebo_add_objects_1.launch
+    ~/catkin_ws/src/ur5_v1/launch/ur5_gripper_gazebo_add_objects_1.launch
 
-Contenido del archivo:
+- Pegar el siguiente código en el nuevo archivo:
 
-    <?xml version="1.0"?>
-    <launch>
-        <!-- Incluye el launch principal del robot con gripper -->
-        <include file="$(find ur5_v5)/launch/ur5_gripper_gazebo_1.launch" />
+        <?xml version="1.0"?>
+        <launch>
+            <!-- Incluye el launch principal del robot con gripper -->
+            <include file="$(find ur5_v1)/launch/ur5_gripper_gazebo_1.launch" />
 
-        <!-- Ejecuta el script delay que luego lanza spawn_objects.launch -->
-        <node name="delayed_spawn" pkg="ur5_v5" type="delayed_spawn.py" output="screen" />
-    </launch>
+            <!-- Ejecuta el script delay que luego lanza spawn_objects.launch -->
+            <node name="delayed_spawn" pkg="ur5_v1" type="delayed_spawn.py" output="screen" />
+        </launch>
 
-Lanzar Gazebo con el UR5 + gripper + objetos:
+- Lanzar en una terminal Gazebo con el UR5 + gripper + objetos:
 
-    roslaunch ur5_v5 ur5_gripper_gazebo_add_objects_1.launch
+    roslaunch ur5_v1 ur5_gripper_gazebo_add_objects_1.launch
 
-Lanzar RViz + MoveIt:
+![gazebo_completo](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/gazebo_completo.png)    
 
-    roslaunch ur5_v5 ur5_gripper_moveit_with_rviz_1.launch
+- Lanzar en una terminal diferente RViz + MoveIt:
+
+    roslaunch ur5_v1 ur5_gripper_moveit_with_rviz_1.launch
+
+![rviz_completo](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/rviz_completo.png) 
+
+---
 
 A partir de ahora, usaremos el archivo ur5_gripper_gazebo_add_objects_1.launch como el launcher principal para levantar el robot y los objetos en Gazebo.
 
 Después, abrimos otra terminal y ejecutamos ur5_gripper_moveit_with_rviz_1.launch para usar MoveIt con RViz.
+
+### 25) Crear script en Python para mover el UR5
+
 
 ### 32. ▶️ Ejecución del Script de Pick & Place
 
