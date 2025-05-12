@@ -225,6 +225,41 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 
 ### 3) Configurar Visualización en RViz y Guardar Configuración
 
+### 4) Configurar Controladores del Robot
+
+
+### 5) Crear Modelos SDF de Objetos
+
+
+### 6) Crear Script para Spawnear Objetos (sin Launch)
+
+
+### 7) Crear Launches de Simulación y Planificación
+
+
+### 8) Spawnear Objetos Desde Launch
+
+
+### 9) Añadir Delay Antes de Spawnear Objetos
+
+
+### 10) Establecer Pose Inicial del Robot con Python
+
+
+### 11) Lanzar Simulación y Spawneo de Objetos
+
+
+### 12) Ver Orientación en RPY en RViz
+
+
+### 13) Ver Articulaciones q1-q6 en RViz
+
+
+### 14)  Incluir Todos los Scripts en el Launch de MoveIt + RViz
+
+
+
+
 
 ## 🤖 Conexión con el Robot Físico UR5
 
