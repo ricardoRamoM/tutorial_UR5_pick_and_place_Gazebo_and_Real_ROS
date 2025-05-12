@@ -4,7 +4,7 @@ Este tutorial te guía paso a paso para simular y ejecutar una tarea de pick and
 
 ---
 
-## 📋 Requisitos Previos
+## 📋 I-Requisitos Previos
 
 🖥️ **Hardware mínimo recomendado**
 
@@ -29,7 +29,7 @@ Este tutorial te guía paso a paso para simular y ejecutar una tarea de pick and
 
 ---
 
-## 📖  Introducción
+## 📖  II-Introducción
 
 En este tutorial aprenderás a simular, planificar trayectorias y controlar una tarea de pick and place utilizando el brazo robótico UR5 con el gripper Robotiq 2F-85, integrando herramientas del ecosistema de ROS Noetic sobre Ubuntu 20.04.
 
@@ -50,7 +50,7 @@ Una vez validado el sistema en simulación, se procede a establecer comunicació
 Este tutorial está diseñado para estudiantes, investigadores y entusiastas de la robótica que deseen aprender a integrar simulación y hardware real usando ROS, enfocándose en aplicaciones prácticas como la automatización de procesos mediante pick and place.
 
 
-## 💾 Instalación del Software Necesario
+## 💾 III-Instalación del Software Necesario
 ### 1. Gazebo (Simulador 3D para ROS)
 
 Si instalaste ros-noetic-desktop-full, ya tienes Gazebo 11 instalado, por lo tanto no necesitas instalarlo aparte.
@@ -118,7 +118,7 @@ Configurar Gazebo para encontrar el plugin:
     echo 'export GAZEBO_PLUGIN_PATH=$GAZABO_PLUGIN_PATH:/usr/local/lib' >> ~/.bashrc
     source ~/.bashrc
 
-## 🛠️ Configuración del entorno 
+## 🛠️ IV-Configuración del entorno 
 ### 1. Creación y configuración del catkin_ws
 Si aún no tienes un workspace de ROS configurado, sigue estos pasos:
 
@@ -236,7 +236,7 @@ Para verificar la simulación del gripper en RVIZ en una nueva terminal ejecutam
 Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + C
 
 
-## 🧪 Simulación del Pick and Place
+## 🧪 V-Simulación del Pick and Place
 
 ### 1) Visualizar el Robot en RViz con Archivo XACRO
 - Crear la carpeta urdf (Unified Robot Description Format) dentro de la ruta ~/catkin_ws/src/ur5_v1
@@ -255,6 +255,7 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 Modificar la interfaz de los joints, cambiando los "PositionJointInterface" por "EffortJointInterface"
 
 Añadir el joint fijo entre world y base_link. Se arregla abajo de la linea 145, o abajo de esto:
+
 		<link name="base_link_inertia">
 		...
 		</link>:	
@@ -315,7 +316,7 @@ Se hace pegando lo siguiente en ese lugar:
 
 
 
-## 🤖 Conexión con el Robot Físico UR5
+## 🤖 VI-Conexión con el Robot Físico UR5
 
     Configuración de red y comunicación con el UR5
 
@@ -323,7 +324,7 @@ Se hace pegando lo siguiente en ese lugar:
 
     Adaptar y ejecutar el mismo script Python en el robot físico
 
-## 🧩 Estructura del Código y Explicación del Script
+## 🧩 VII-Estructura del Código y Explicación del Script
 
     Desglose del script Python
 
@@ -351,7 +352,7 @@ Se hace pegando lo siguiente en ese lugar:
 
 
 
-## ✅ Conclusión
+## ✅ VIII-Conclusión
 
 Resumen de lo que se logró construir, aprendizajes obtenidos y posibles mejoras o versiones futuras del proyecto.
 
@@ -359,23 +360,23 @@ Como se pudo observar la implementación de la simulacion de un Pick and Place a
 
 Futuras versiones del trabajo implementaran mejoras en la resolucion de la cinematica inversa del entorno que tenemos, asi con esto la adaptación de MoveIt con los parametros de nuestro workspace y el añadimiento del gripper en la implementación fisica.
 
-## 🔜 Mejoras futuras
+## 🔜 IX-Mejoras futuras
 
 - [ ] Implementacion fisica del gripper Robotiq 2F-85
 - [ ] Resolucion de la cinematica Inversa de acuerdo a las limitaciones del propio WorkSpace
 - [ ] Pick And Place mejorado para una mejor y mas rapida trayectoria con movimientos mas adecuados y suaves para su rapida solución.
 
-## ⚠️ Advertencia
+## ⚠️ X-Advertencia
 
 Como se indica en la licencia MIT, este software/hardware se proporciona sin ningún tipo de garantía. Por lo tanto, ningún colaborador es responsable de cualquier daño a tus componentes, materiales, PC, etc...
-## 📚 Recursos Adicionales
+## 📚 XI-Recursos Adicionales
 
-## 👥 Autores del proyecto
+## 👥 XII-Autores del proyecto
 
 - [ ] Ricardo Ramos Morales
 - [ ] David León Céspedes
 
-## 📬 Contacto
+## 📬 XIII-Contacto
 
 ¿Tienes dudas o sugerencias?
 
