@@ -1577,13 +1577,30 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
         joints:
             - robotiq_85_left_knuckle_joint
 
+- Ahora en esta ruta /ur_gripper_moveit_config/launch, crear un  nuevo archivo llamado 		"ur5_robot_moveit_controller_manager.launch"
+- Añadir ahi el siguiente código en el nuevo archivo:
+
+        <launch>
+            <arg name = "moveit_controller_manager" default "moveit_simple_controller_manager/MoveItSimpleControllerManager" />
+            <param name = "moveit_controller_manager" value = "$(arg moveit_controller_manager)" />
+
+            <!-- load ros_controllers to the param server -->
+            <rosparam file ="$(find ur_gripper_moveit_config)/config/ros_controllers.yaml" />
+        </launch>
 
 
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-### 
-### 25. Ajustes para visualizar correctamente el Gripper 🛠️🤖
+- Revisar que esta ocurriendo con este package por lo tanto lanzamos el demo del package desde una terminal:
 
-Estos pasos corrigen errores comunes relacionados con el uso del plugin y la configuración de los *joints* del gripper Robotiq 85.
+		roslaunch ur_gripper_moveit_config demo.launch        
+
+![ur5_gripper_moveit_rviz](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/ur5_gripper_moveit_rviz.png)
+    
+
+### 18) Ajustar URDFs para visualización correcta del gripper
+
+    (Antes: Realizar ajustes para que se visualice correctamente el gripper)
+
+    Estos pasos corrigen errores comunes relacionados con el uso del plugin y la configuración de los *joints* del gripper Robotiq 85.
 
 ---
 Reemplazar plugin incorrecto en archivos URDF
@@ -1630,6 +1647,26 @@ Compilar cambios:
 
 cd ~/catkin_ws
 catkin_make
+
+
+### 19) Crear archivo de controladores con soporte para el gripper
+
+    (Antes: Crear nuevo archivo controllers.yaml con gripper incluido)
+
+### 20) Lanzar UR5 con gripper en Gazebo
+
+    (Antes: Crear nuevo launch file para Gazebo con gripper)
+
+### 21) Lanzar UR5 con gripper en MoveIt y RViz
+
+    (Antes: Crear nuevo launch file para MoveIt con RViz y gripper)
+
+### 22) Corregir estados predefinidos del gripper en SRDF
+
+-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+### 
+### 25. Ajustes para visualizar correctamente el Gripper 🛠️🤖
+
 
 ### 26. Añadir configuración para el Gripper 🦾📄
 
