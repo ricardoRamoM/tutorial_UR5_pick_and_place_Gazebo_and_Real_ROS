@@ -2257,12 +2257,13 @@ En una nueva terminal ejecuta el codigo con:
 
     rosrun ur5_v1 pick_and_place_1.py
 
-<iframe width="560" height="315"
-  src="https://youtu.be/u81WhUBGgIY"
-  frameborder="0" allowfullscreen>
-</iframe>
+<p align="center">
+  <a href="https://www.youtube.com/u81WhUBGgIY"><img src="https://img.youtube.com/vi/u81WhUBGgIY/0.jpg" alt="Video de Vending Machine"></a>
+</p>
 
 ## 🤖 VII-Ejecución en el Robot UR5 Físico
+
+### Preparar el robot
 
     Configuración de red y comunicación con el UR5
 
