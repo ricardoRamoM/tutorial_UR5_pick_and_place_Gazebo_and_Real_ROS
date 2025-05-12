@@ -330,22 +330,30 @@ Añadir el joint fijo entre world y base_link
 
 Resumen de lo que se logró construir, aprendizajes obtenidos y posibles mejoras o versiones futuras del proyecto.
 
+Como se pudo observar la implementación de la simulacion de un Pick and Place a traves de ROS con el entorno de simulacion Gazebo fue exitosa con la previa configuracion de todo el workspace para su debido funcionamiento, con esto se pudo denotar el fuerte uso y aplicaciones que tiene el Robotics Operating System el cual nos ayuda a la comunicación y descripción de elementos de robotica que pueden tener un uso simulado como con su implementación física. Asi con esto  El UR5 es un brazo robotico con 6GDL el cual nos ayudo a comprender mas sobre como funciona ROS a la hora de marcar trayectorias y la resolucion de ciertas posiciones para nuestro espacio de trabajo.
+
+Futuras versiones del trabajo implementaran mejoras en la resolucion de la cinematica inversa del entorno que tenemos, asi con esto la adaptación de MoveIt con los parametros de nuestro workspace y el añadimiento del gripper en la implementación fisica.
+
 ## 🔜 Mejoras futuras
 
-    Enlistar las mejoras a realizar
+- [ ] Implementacion fisica del gripper Robotiq 2F-85
+- [ ] Resolucion de la cinematica Inversa de acuerdo a las limitaciones del propio WorkSpace
+- [ ] Pick And Place mejorado para una mejor y mas rapida trayectoria con movimientos mas adecuados y suaves para su rapida solución.
 
-## 📌 Advertencias y consejos
+## ⚠️ Advertencia
 
 Como se indica en la licencia MIT, este software/hardware se proporciona sin ningún tipo de garantía. Por lo tanto, ningún colaborador es responsable de cualquier daño a tus componentes, materiales, PC, etc...
 ## 📚 Recursos Adicionales
 
-
 ## 👥 Autores del proyecto
 
-Autores originales del proyecto
+- [ ] Ricardo Ramos Morales
+- [ ] David León Cespedes
 
 ## 📬 Contacto
 
 ¿Tienes dudas o sugerencias?
 
-    📧 Correo electrónico: ejemplo@udlap.mx
+    📧 Correo electrónico: ricardo.moralesr@udlap.mx
+    📧 Correo electrónico: david.leoncs@udlap.mx
+
