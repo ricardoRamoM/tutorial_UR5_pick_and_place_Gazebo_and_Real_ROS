@@ -852,8 +852,8 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
             # Ajusta las posiciones de cada modelo
             positions = {
                 'mesa': (0, 0.3, 0),
-                'dropbox': (-0.7, 0.3, 0.985),
-                'dropbox2': (-0.7, 0.65, 0.985),
+                'dropbox': (-0.5, 0.3, 0.985),
+                'dropbox2': (-0.5, 0.55, 0.985),
                 'cubo1': (0.6, 0.8, 1.01),
                 'cubo2': (0.9, 0.4, 1.01),
                 'cubo3': (0.7, 0.1, 1.01),
@@ -991,8 +991,8 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
                 # Ajusta las posiciones de cada modelo
                 positions = {
                     'mesa': (0, 0.3, 0),
-                    'dropbox': (-0.7, 0.3, 0.985),
-                    'dropbox2': (-0.7, 0.65, 0.985),
+                    'dropbox': (-0.5, 0.3, 0.985),
+                    'dropbox2': (-0.5, 0.55, 0.985),
                     'cubo1': (0.6, 0.8, 1.01),
                     'cubo2': (0.9, 0.4, 1.01),
                     'cubo3': (0.7, 0.1, 1.01),
@@ -2148,105 +2148,119 @@ Una vez confirmado que el robot se mueve correctamente con los scripts de cinem�
 	- En terminal: chmod +x pick_and_place_1.py
 - Pegar el código de abajo		
 
-            #!/usr/bin/env python3
+        #!/usr/bin/env python3
 
-            import sys
-            import rospy
-            import moveit_commander
-            from geometry_msgs.msg import Pose
-            from tf.transformations import quaternion_from_euler
+        import sys
+        import rospy
+        import moveit_commander
+        from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+        from geometry_msgs.msg import Pose
+        from tf.transformations import quaternion_from_euler
 
-            def open_gripper():
-                # Si tienes control por joint
-                gripper_group.set_named_target("open")
-                gripper_group.go(wait=True)
+        # Publisher global para el gripper
+        gripper_pub = None
 
-            def close_gripper():
-                gripper_group.set_named_target("close")
-                gripper_group.go(wait=True)
+        def open_gripper():
+            gripper_group.set_named_target("open")
+            gripper_group.go(wait=True)
 
-            def go_to_pose(pose_target):
-                arm_group.set_pose_target(pose_target)
-                plan = arm_group.go(wait=True)
-                arm_group.stop()
-                arm_group.clear_pose_targets()
+        def close_gripper():
+            gripper_group.set_named_target("close")
+            gripper_group.go(wait=True)
 
-            def create_pose(x, y, z, roll=0, pitch=0, yaw=0):
-                # Convertir de RPY (roll, pitch, yaw) a quaternion (x, y, z, w)
-                qx, qy, qz, qw = quaternion_from_euler(roll, pitch, yaw)
-                
-                pose = Pose()
-                pose.position.x = x
-                pose.position.y = y
-                pose.position.z = z
-                pose.orientation.x = qx
-                pose.orientation.y = qy
-                pose.orientation.z = qz
-                pose.orientation.w = qw
-                return pose
+        def move_gripper(position, duration=2.0):
+            global gripper_pub
+            if gripper_pub is None:
+                gripper_pub = rospy.Publisher('/gripper_controller/command', JointTrajectory, queue_size=10)
+                rospy.sleep(1)  # Espera a que el publisher esté listo
 
-            if __name__ == "__main__":
-                moveit_commander.roscpp_initialize(sys.argv)
-                rospy.init_node('ur5_pick_and_place', anonymous=True)
+            traj = JointTrajectory()
+            traj.joint_names = ['robotiq_85_left_knuckle_joint']
 
-                arm_group = moveit_commander.MoveGroupCommander("manipulator")  # nombre de grupo en MoveIt
-                gripper_group = moveit_commander.MoveGroupCommander("gripper")  # nombre de grupo del gripper en MoveIt (ajústalo)
+            point = JointTrajectoryPoint()
+            point.positions = [position]
+            point.time_from_start = rospy.Duration(duration)
 
-                # Velocidades (opcional)
-                arm_group.set_max_velocity_scaling_factor(0.5)
-                arm_group.set_max_acceleration_scaling_factor(0.5)
+            traj.points.append(point)
 
-                # 1️⃣ Aproach sobre objeto
-                approach_pick = create_pose(0.7, 0.1, 0.3, 0, 3.14, 0)  # ajusta coordenadas
-                pick_pose = create_pose(0.7, 0.1, 0.2, 0, 3.14, 0)      # ajusta coordenadas
+            rospy.loginfo(f"Moviendo gripper a {position} rad")
+            gripper_pub.publish(traj)
+            rospy.sleep(duration + 1)
 
-                # 2️⃣ Aproach sobre posición de depósito
-            #    approach_place = create_pose(-0.25, 0.65, 0.7, 0, 3.14, 0)  # ajusta coordenadas
-            #   place_pose = create_pose(-0.25, 0.65, 0.6, 0, 3.14, 0)      # ajusta coordenadas
+        def go_to_pose(pose_target):
+            arm_group.set_pose_target(pose_target)
+            success = arm_group.go(wait=True)
+            arm_group.stop()
+            arm_group.clear_pose_targets()
+            return success
 
-                approach_place = create_pose(-0.5, 0.5, 0.5, 0, 3.14, 0)  # ajusta coordenadas
-                place_pose = create_pose(-0.5, 0.5, 0.4, 0, 3.14, 0)      # ajusta coordenadas
+        def create_pose(x, y, z, roll=0, pitch=0, yaw=0):
+            qx, qy, qz, qw = quaternion_from_euler(roll, pitch, yaw)
+            
+            pose = Pose()
+            pose.position.x = x
+            pose.position.y = y
+            pose.position.z = z
+            pose.orientation.x = qx
+            pose.orientation.y = qy
+            pose.orientation.z = qz
+            pose.orientation.w = qw
+            return pose
 
-                # 3️⃣ Regresar a la posición "up"
-                arm_group.set_named_target("up")  # Usamos la posición "up" definida
-                arm_group.go(wait=True)
+        if __name__ == "__main__":
+            moveit_commander.roscpp_initialize(sys.argv)
+            rospy.init_node('ur5_pick_and_place', anonymous=True)
+            rospy.sleep(2)  # Da tiempo para que todo se inicialice
 
-                # Mover al approach_pick
-                go_to_pose(approach_pick)
+            arm_group = moveit_commander.MoveGroupCommander("manipulator")
+            gripper_group = moveit_commander.MoveGroupCommander("gripper")
 
-                # Bajar al pick_pose
-                go_to_pose(pick_pose)
+            arm_group.set_max_velocity_scaling_factor(0.5)
+            arm_group.set_max_acceleration_scaling_factor(0.5)
 
-                # Cerrar gripper
-                close_gripper()
+            # Poses para recoger y colocar
+            approach_pick = create_pose(0.7, 0.1, 0.3, 0, 3.14, 0)
+            pick_pose = create_pose(0.7, 0.1, 0.18, 0, 3.14, 0)
+            approach_place = create_pose(-0.5, 0.5, 0.5, 0, 3.14, 0)
+            place_pose = create_pose(-0.5, 0.5, 0.4, 0, 3.14, 0)
+            #approach_place = create_pose(-0.25, 0.65, 0.7, 0, 3.14, 0)  # ajusta coordenadas
+            #place_pose = create_pose(-0.25, 0.65, 0.6, 0, 3.14, 0)      # ajusta coordenadas
 
-                # Subir a approach_pick
-                go_to_pose(approach_pick)
+            # Secuencia Pick and Place
+            if not go_to_pose(approach_pick):
+                rospy.logerr("Error al mover a approach_pick"); exit(1)
 
-                # Mover al approach_place
-                go_to_pose(approach_place)
+            if not go_to_pose(pick_pose):
+                rospy.logerr("Error al mover a pick_pose"); exit(1)
 
-                # Bajar al place_pose
-                go_to_pose(place_pose)
+            move_gripper(0.39)  # Cerrar gripper
 
-                # Abrir gripper
-                open_gripper()
+            if not go_to_pose(approach_pick):
+                rospy.logerr("Error al regresar a approach_pick"); exit(1)
 
-                # Subir a approach_place
-                go_to_pose(approach_place)
+            if not go_to_pose(approach_place):
+                rospy.logerr("Error al mover a approach_place"); exit(1)
 
-                arm_group.set_named_target("up")  # Usamos la posición "up" definida
-                arm_group.go(wait=True)
+            if not go_to_pose(place_pose):
+                rospy.logerr("Error al mover a place_pose"); exit(1)
 
-                rospy.loginfo("Pick and Place completado ")
+            move_gripper(0.0)  # Abrir gripper
 
-                moveit_commander.roscpp_shutdown()
+            if not go_to_pose(approach_place):
+                rospy.logerr("Error al regresar a approach_place"); exit(1)
+
+            rospy.loginfo("✅ Pick and Place completado exitosamente.")
+            moveit_commander.roscpp_shutdown()
 
 
 En una nueva terminal ejecuta el codigo con:
 
     rosrun ur5_v1 pick_and_place_1.py
 
+<iframe width="560" height="315"
+  src="https://youtu.be/u81WhUBGgIY"
+  frameborder="0" allowfullscreen>
+</iframe>
 
 ## 🤖 VII-Ejecución en el Robot UR5 Físico
 

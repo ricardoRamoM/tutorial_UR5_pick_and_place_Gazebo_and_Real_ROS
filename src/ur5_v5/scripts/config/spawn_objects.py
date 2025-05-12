@@ -37,8 +37,8 @@ if __name__ == '__main__':
     # Ajusta las posiciones de cada modelo
     positions = {
         'mesa': (0, 0.3, 0),
-        'dropbox': (-0.7, 0.3, 0.985),
-        'dropbox2': (-0.7, 0.65, 0.985),
+        'dropbox': (-0.5, 0.3, 0.985),
+        'dropbox2': (-0.5, 0.55, 0.985),
         'cubo1': (0.6, 0.8, 1.01),
         'cubo2': (0.9, 0.4, 1.01),
         'cubo3': (0.7, 0.1, 1.01),
