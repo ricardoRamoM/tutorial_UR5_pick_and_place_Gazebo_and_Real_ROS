@@ -147,12 +147,16 @@ Dentro de la carpeta src, clona los siguientes paquetes necesarios para el UR5 y
 
 #### B) Instalar el plugin mimic (para articulaciones sincronizadas del gripper)
 
-Este plugin es necesario para simular correctamente el movimiento sincronizado de los dedos del gripper. Solo es ncesario si no lo instalaste globalmente y decidiste instalarlo en tu workspace: 
+Este plugin es necesario para simular correctamente el movimiento sincronizado de los dedos del gripper. Solo es necesario si no lo instalaste globalmente:
 
     cd ~/catkin_ws/src
     git clone https://github.com/roboticsgroup/roboticsgroup_gazebo_plugins.git
     cd ..
     catkin_make
+
+Si lo instalaste globalmente, puedes verificarlo con:
+
+    find /usr/ -name "libroboticsgroup_gazebo_mimic_joint_plugin.so"
 
 #### C) Agregar el gripper Robotiq 2F-85
 En este tutorial usaremos una versión simplificada del modelo del gripper:
@@ -163,7 +167,8 @@ En este tutorial usaremos una versión simplificada del modelo del gripper:
     cd ..
     catkin_make
 
-Nota: La version completa está en este github: https://github.com/philwall3/UR5-with-Robotiq-Gripper-and-Kinect/tree/master. De este se necesita principalmente, al menos para simulacion, lo que está en esta ruta: robotiq_85_gripper-master/robotiq_85_description. Pero para simplificar las cosas, en este tutorial no usaremos este github.
+Nota: La version completa está en este github: https://github.com/philwall3/UR5-with-Robotiq-Gripper-and-Kinect/tree/master.
+Para simulación basta con la carpeta: robotiq_85_gripper-master/robotiq_85_description, pero este tutorial usa una versión simplificada.
 
 ### 3. Compilación con catkin_make
 Una vez descargados los paquetes:
@@ -175,18 +180,30 @@ Una vez descargados los paquetes:
 Si todo se compila sin errores, ¡ya tienes tu entorno base configurado!
 
 ### 4. Sourcing del workspace
-Para que en cada nueva terminal que abras y trabajes en este proyecto, no debas de hacer esto:
+Para no tener que hacer esto cada vez:
 
     source ~/catkin_ws/devel/setup.bash
 
-Se puede automatizar con:
+Automatízalo añadiéndolo a tu .bashrc con la ayuda de este comando:
 
     echo "source ~catkin_ws/devel/setup.bash" >> ~/.bashrc
 
-Si ya hiciste esto último ya en automatico hará el sourcing en cada nueva terminal.
+Si ya hiciste esto último, en automatico hará el sourcing en cada nueva terminal.
+
+### 5. Crear tu propio paquete (package)
+Crea un paquete donde guardarás tus archivos de control, simulación y scripts ejecutando las siguientes instrucciones en la terminal:
+    cd ~/catkin_ws/src
+    catkin_create_pkg ur5_v1 controller_manager joint_state_controller robot_state_publisher roscpp rospy std_msgs urdf
+    cd ..
+    catkin_make
+
+Esto te generará la estructura básica en catkin_ws/src/ur5_V1, donde colocarás tus archivos .launch, URDFs y scripts Python.
+
+Nota: Recordemos que para crear un package, se debe de seguir la siguiente estructura:
+    catkin_create_pkg  <name_of_package> <dependencies of package>
 
 
-### 5. Probar simulación básica (UR5 y gripper)
+### 6. Probar simulación básica (UR5 y gripper)
 Para verificar la simuación del UR5 en Gazebo y RVIZ. Abre tres terminales para ejecutar lo siguiente:
 
 **Terminal 1** – Lanzar UR5 en Gazebo:
@@ -220,10 +237,20 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 ## 🧪 Simulación del Pick and Place
 
 ### 1) Visualizar el Robot en RViz con Archivo XACRO
+Crear la carpeta urdf dentro del package ur5_v5
+
+Crear el archivo ur5_5.xacro
+
+Modificar la interfaz de los joints
+
+Añadir el joint fijo entre world y base_link
 
 ### 2) Crear Launch para Mostrar el Robot en RViz
 
+
 ### 3) Configurar Visualización en RViz y Guardar Configuración
+
+
 
 ### 4) Configurar Controladores del Robot
 
