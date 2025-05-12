@@ -2257,14 +2257,59 @@ En una nueva terminal ejecuta el codigo con:
 
     rosrun ur5_v1 pick_and_place_1.py
 
+Da click en la imagen para mostrar un video de la simulacion del pick and place.
+
 <p align="center">
-  <a href="https://www.youtube.com/u81WhUBGgIY"><img src="https://img.youtube.com/vi/u81WhUBGgIY/0.jpg" alt="Video de Vending Machine"></a>
+  <a href="https://www.youtube.com/watch?v=u81WhUBGgIY">
+    <img src="https://img.youtube.com/vi/u81WhUBGgIY/0.jpg" alt="Video de pick and place en Gazebo">
+  </a>
 </p>
 
 ## 🤖 VII-Ejecución en el Robot UR5 Físico
 
-### Preparar el robot
+### 1) Verificación del URCap
+1. En el teach pendant: `Setup Robot → URCaps`
+   - Verifica que esté **External Control** en la lista.
+2. Si no aparece:
+   - Descarga el archivo `externalcontrol-x.x.x.urcap` desde el repositorio:
+     https://github.com/UniversalRobots/Universal_Robots_ROS_Driver
+   - Copia el archivo a una USB.
+   - En `URCaps`, selecciona el símbolo `+`, localiza el `.urcap` y ábrelo.
 
+   ![urcap_install](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/urcap_install.jepg) 
+
+   - Reinicia el robot cuando lo indique.
+   - Ahora si creas un nuevo programa, en URCAPS, ya te saldrá External control.
+
+   ![urcap_instalado](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/urcap_instalado.jpeg) 
+
+
+3. En el teach pendant:
+   - Ve a `Installation → External Control`
+   - Anota la **IP del robot** y el **Host IP** que ahí se muestra.
+        - En nuestro caso el IP del robot fue: 192.168.1.237
+
+---
+
+### 2) Configuración de red
+
+
+### 3) Configuración de red
+
+Conectar el robot por cable ethernet a tu computadora a través del puerto ubicado por debajo de la consola del UR5.
+
+![ethernet](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/ethernet.jpeg) 
+
+
+---
+
+#### A. Obtener la IP del UR5
+Teach pendant → `Config. Robot → Red → Dirección IP`  
+Ejemplo: `192.168.1.237`
+
+### B. Asignar IP estática a tu PC
+```bash
+sudo ifconfig eno1 192.168.1.100 netmask 255.255.255.0 up
     Configuración de red y comunicación con el UR5
 
     Lanzar el robot real con MoveIt
