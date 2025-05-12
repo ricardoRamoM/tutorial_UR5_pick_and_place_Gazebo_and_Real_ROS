@@ -936,13 +936,156 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 ![gazebo_play](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/gazebo_play.png)
 
 ### 8) Spawnear Objetos Desde Launch
+- Crear archivo python para spawnear los objetos directamente desde un launch:
 
+    - En la carpeta 'config' dentro de scripts, osea en ~/catkin_ws_1/src/ur5_v1/scripts/config
+    - Crear un archivo llamado 'spawn_objects.py'
+    - Darle permisos de ejecucion al archivo, hay 2 opciones:
+        - En Archivos buscar el archivo python, darle en Propiedades -> Permisos -> Permitir ejecutar el archivo como un programa
+        - En terminal: chmod +x spawn_objects.py
+    - Pegar el codigo de abajo
+
+            #!/usr/bin/env python3
+            import rospy
+            from gazebo_msgs.srv import SpawnModel
+            from geometry_msgs.msg import Pose
+
+            def spawn_sdf_model(spawn_model_prox, model_name, model_path, x, y, z):
+                with open(model_path, 'r') as f:
+                    model_xml = f.read()
+
+                pose = Pose()
+                pose.position.x = x
+                pose.position.y = y
+                pose.position.z = z
+
+                try:
+                    spawn_model_prox(model_name, model_xml, '', pose, 'world')
+                    rospy.loginfo(f"Modelo {model_name} cargado.")
+                except rospy.ServiceException as e:
+                    rospy.logerr(f"Error al cargar {model_name}: {e}")
+
+            if __name__ == '__main__':
+                rospy.init_node('spawn_objects')
+
+                # Esperar al servicio de spawn
+                rospy.wait_for_service('/gazebo/spawn_sdf_model')
+                spawn_model_prox = rospy.ServiceProxy('/gazebo/spawn_sdf_model', SpawnModel)
+
+                models = {
+                    'mesa': '/home/gazebo-ros/catkin_ws_1/src/ur5_v1/worlds/sdf/mesa.sdf',
+                    'dropbox': '/home/gazebo-ros/catkin_ws_1/src/ur5_v1/worlds/sdf/dropbox.sdf',
+                    'dropbox2': '/home/gazebo-ros/catkin_ws_1/src/ur5_v1/worlds/sdf/dropbox2.sdf',
+                    'cubo1': '/home/gazebo-ros/catkin_ws_1/src/ur5_v1/worlds/sdf/cube1.sdf',
+                    'cubo2': '/home/gazebo-ros/catkin_ws_1/src/ur5_v1/worlds/sdf/cube2.sdf',
+                    'cubo3': '/home/gazebo-ros/catkin_ws_1/src/ur5_v1/worlds/sdf/cube3.sdf',
+                }
+
+                # Ajusta las posiciones de cada modelo
+                positions = {
+                    'mesa': (0, 0.3, 0),
+                    'dropbox': (-0.7, 0.3, 0.985),
+                    'dropbox2': (-0.7, 0.65, 0.985),
+                    'cubo1': (0.6, 0.8, 1.01),
+                    'cubo2': (0.9, 0.4, 1.01),
+                    'cubo3': (0.75, -0.05, 1.01),
+                }
+
+                for name, path in models.items():
+                    x, y, z = positions[name]
+                    spawn_sdf_model(spawn_model_prox, name, path, x, y, z)
+
+- Crear un nuevo archivo launch para ejecutar el archivo python
+	- En la carpeta launch crear nuevo archivo llamado "spawn_objects.launch"	
+	- Copiar el siguiente codigo
+
+            <?xml version="1.0"?>
+            <launch>
+                <!-- Lanzar el script spawn_objects.py -->
+                <node name="spawn_objects" pkg="ur5_v1" type="spawn_objects.py" output="screen" />
+            </launch>  
 
 ### 9) Añadir Delay Antes de Spawnear Objetos
+- Crear nuevo archivo python para colocar los objetos 5 segundos despues de colocar el robot
+	- En la carpeta 'config' dentro de 'scripts', osea en ~/catkin_ws_1/src/ur5_v5/scripts/config
+	- Crear un archivo llamado 'delayed_spawn.py'
+	- Darle permisos de ejecucion al archivo, hay 2 opciones:
+		- En Archivos buscar el archivo python, darle en Propiedades -> Permisos -> Permitir ejecutar el archivo como un programa
+		- En terminal: chmod +x delayed_spawn.py.py
+	- Pegar el codigo de abajo  
 
+            #!/usr/bin/env python3
+
+            import rospy
+            import subprocess
+            import time
+
+            def main():
+                rospy.init_node('delayed_spawn')
+                rospy.loginfo("Esperando 5 segundos antes de lanzar spawn_objects.launch...")
+                time.sleep(5)
+                rospy.loginfo("Lanzando spawn_objects.launch...")
+                subprocess.call(['roslaunch', 'ur5_v1', 'spawn_objects.launch'])
+
+            if __name__ == '__main__':
+                main()
 
 ### 10) Establecer Pose Inicial del Robot con Python
+- En esta ruta '~/catkin_ws_1/src/ur5_v5/scripts/config', crear nuevo archivo python llamado "ur5_set_initial_pose.py". 
+- Darle permisos de ejecucion al archivo, hay 2 opciones:
+	- En Archivos buscar el archivo python, darle en Propiedades -> Permisos -> Permitir ejecutar el archivo como un programa
+	- En terminal: chmod +x 'ur5_set_initial_pose.py'
+- Copiar y pegar el siguiente código.
 
+        #!/usr/bin/env python3
+
+        import rospy
+        from controller_manager_msgs.srv import ListControllers
+        from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+
+        def wait_for_controller():
+            rospy.wait_for_service('/controller_manager/list_controllers')
+            list_controllers = rospy.ServiceProxy('/controller_manager/list_controllers', ListControllers)
+            while not rospy.is_shutdown():
+                controllers = list_controllers()
+                for c in controllers.controller:
+                    if c.name == 'eff_joint_traj_controller' and c.state == 'running':
+                        rospy.loginfo('Controller is running.')
+                        return
+                rospy.loginfo('Waiting for eff_joint_traj_controller to be running...')
+                rospy.sleep(1)
+
+        def send_initial_pose():
+            pub = rospy.Publisher('/eff_joint_traj_controller/command', JointTrajectory, queue_size=10)
+            rospy.sleep(1)  # give publisher time to connect
+
+            traj = JointTrajectory()
+            traj.joint_names = [
+                'shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint',
+                'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint'
+            ]
+            point = JointTrajectoryPoint()
+            point.positions = [0.0, -1.57, 0.0, -1.57, 0.0, 0.0]
+            point.velocities = [0.0] * 6
+            point.time_from_start = rospy.Duration(1.0)
+            traj.points.append(point)
+
+            rospy.loginfo('Publishing initial pose...')
+            pub.publish(traj)
+            rospy.loginfo('Initial pose published.')
+
+        if __name__ == '__main__':
+            rospy.init_node('set_initial_pose')
+            wait_for_controller()
+            send_initial_pose()
+
+- Crear una copia del archivo 'ur5_gazebo_1.launch' y renombrarlo 'ur5_gazebo_2.launch'
+- Añadir a ese launch "ur5_gazebo_2.launch" lo siguiente:
+
+**************************************
+    <!-- Establecer postura inicial con script Python -->
+    <node name="set_initial_pose" pkg="ur5_v5" type="ur5_set_initial_pose.py" output="screen"/>            
+**************************************
 
 ### 11) Lanzar Simulación y Spawneo de Objetos
 
