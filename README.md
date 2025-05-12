@@ -377,8 +377,8 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
     publish_rate: &loop_hz 125 
 
 ### 5) Crear Modelos SDF de Objetos
-- Crear la carpeta 'worlds' en ~/catkin_ws_7/src/ur5_v5
-- Crear carpeta 'sdf' en ~/catkin_ws_7/src/ur5_v5/worlds
+- Crear la carpeta 'worlds' en ~/catkin_ws_1/src/ur5_v1
+- Crear carpeta 'sdf' en ~/catkin_ws_1/src/ur5_v1/worlds
 - Crear los archivos sdf de cada objeto que queremos colocar en el mundo en la carpeta'sdf'
 - Crearemos los siguientes archivos:
     - cube1.sdf
@@ -798,10 +798,131 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 
 
 ### 6) Crear Script para Spawnear Objetos (sin Launch)
+- Crear la carpeta 'scripts' en ~/catkin_ws_1/src/ur5_v1
+- Crear ahí una nueva carpeta llamada 'config'
+- En la carpeta 'config' recien creada crear un archivo llamado 'spawn_objects_no_launch.py'
+- Darle permisos de ejecucion al archivo, hay 2 opciones:
+    - En Archivos buscar el archivo python, darle en Propiedades -> Permisos -> Permitir ejecutar el archivo como un programa
+    - En terminal: chmod +x spawn_objects_no_launch.py
+- Pegar el codigo de abajo
 
+        #!/usr/bin/env python3
+        import rospy
+        from gazebo_msgs.srv import SpawnModel
+        from geometry_msgs.msg import Pose
+
+        def spawn_sdf_model(model_name, model_path, x, y, z):
+            with open(model_path, 'r') as f:
+                model_xml = f.read()
+
+            pose = Pose()
+            pose.position.x = x
+            pose.position.y = y
+            pose.position.z = z
+
+            try:
+                spawn_model_prox(model_name, model_xml, '', pose, 'world')
+                rospy.loginfo(f"Modelo {model_name} cargado.")
+            except rospy.ServiceException as e:
+                rospy.logerr(f"Error al cargar {model_name}: {e}")
+
+        if __name__ == '__main__':
+            rospy.init_node('spawn_objects')
+
+            # Esperar al servicio de spawn
+            rospy.wait_for_service('/gazebo/spawn_sdf_model')
+            spawn_model_prox = rospy.ServiceProxy('/gazebo/spawn_sdf_model', SpawnModel)
+
+            models = {
+                'mesa': '/home/gazebo-ros/catkin_ws_1/src/ur5_v1/worlds/sdf/mesa.sdf',
+                'dropbox': '/home/gazebo-ros/catkin_ws_1/src/ur5_v1/worlds/sdf/dropbox.sdf',
+                'dropbox2': '/home/gazebo-ros/catkin_ws_1/src/ur5_v1/worlds/sdf/dropbox2.sdf',
+                'cubo1': '/home/gazebo-ros/catkin_ws_1/src/ur5_v1/worlds/sdf/cube1.sdf',
+                'cubo2': '/home/gazebo-ros/catkin_ws_1/src/ur5_v1/worlds/sdf/cube2.sdf',
+                'cubo3': '/home/gazebo-ros/catkin_ws_1/src/ur5_v1/worlds/sdf/cube3.sdf',
+            }
+
+            # Ajusta las posiciones de cada modelo
+            positions = {
+                'mesa': (0, 0.3, 0),
+                'dropbox': (-0.7, 0.3, 0.985),
+                'dropbox2': (-0.7, 0.65, 0.985),
+                'cubo1': (0.6, 0.8, 1.01),
+                'cubo2': (0.9, 0.4, 1.01),
+                'cubo3': (0.75, 0.35, 1.01),
+            }
+
+            for name, path in models.items():
+                x, y, z = positions[name]
+                spawn_sdf_model(name, path, x, y, z)
 
 ### 7) Crear Launches de Simulación y Planificación
+- Hacer los siguientes 2 archivos launch en una nueva carpeta en ~/catkin_ws_1/src/ur5_v1/launch
+	- ur5_gazebo_1.launch
+		→ Gazebo con UR5 corriendo
+		→ Publica /robot_description, /tf, /joint_states
+		→ Carga controladores
 
+            <?xml version="1.0"?>
+            <launch>
+
+                <!-- Cargar el modelo UR5 -->
+                <param name="robot_description" command="$(find xacro)/xacro '$(find ur5_v1)/urdf/ur5_1.xacro'" /> 
+            
+                <!--Spawn Robot in Gazebo-->
+                <!-- Set the position in empty world of the base link-->
+                <arg name="x" default="0" />
+                <arg name="y" default="0" />
+                <arg name="z" default="0.985" />
+
+                <!-- put world file as argument-->
+                <arg name="world_file" default = "$(find ur5_v1)/worlds/my_custom_world.world" />
+
+                <!-- Lanzar Gazebo con tu mundo -->
+                <include file="$(find gazebo_ros)/launch/empty_world.launch">
+                    <arg name="paused" value="false"/>
+                    <arg name="gui" value="true"/>
+                    <arg name="use_sim_time" value="true"/>
+                    <arg name="world_name" value="$(arg world_file)"/>
+                </include>
+
+                <!-- Publicar estados del robot -->
+                <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+                
+                <!-- Spawn the robot using the package gazebo_ros-->
+                <node name="spawn_the_robot" pkg="gazebo_ros" type="spawn_model"  output="screen" args="-urdf -param robot_description -model ur5 -x $(arg x) -y $(arg y) -z $(arg z)" />  
+
+                <!-- Controladores -->
+                <!-- Cargar Controladores -->
+                <rosparam file="$(find ur5_v1)/config/ur5_controllers.yaml" command="load"/>
+            
+                <!-- Cargar the node Controller manager -->
+                <node name="controller_spawner" pkg="controller_manager" type="spawner"
+                args="joint_state_controller 
+                eff_joint_traj_controller 
+                --timeout 60 " />
+
+            </launch>
+
+    - ur5_moveit_with_rviz_1.launch
+		→ Lanzas ur5_moveit_with_rviz.launch → MoveIt + remapeo + RViz
+        
+            <launch>
+            <arg name="sim" default="true" />
+            <arg name="debug" default="false" />
+
+            <!-- Remapea trajectory controller para Gazebo -->
+            <remap if="$(arg sim)" from="/scaled_pos_joint_traj_controller/follow_joint_trajectory" to="/eff_joint_traj_controller/follow_joint_trajectory"/>
+
+            <!-- Lanza MoveIt  con la config de Universal Robots-->
+            <include file="$(find ur5_moveit_config)/launch/move_group.launch">
+                <arg name="debug" value="$(arg debug)" />
+            </include>
+
+            <!-- Lanza RViz con la configuración de RVIZ guardada en config -->
+            <node name="rviz" pkg="rviz" type="rviz" output="screen"
+                    args="-d $(find ur5_v1)/config/config.rviz" />
+            </launch>
 
 ### 8) Spawnear Objetos Desde Launch
 
