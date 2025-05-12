@@ -45,8 +45,7 @@ Este tutorial te guía paso a paso para simular y ejecutar una tarea de pick and
    - [21. Crear archivo de controladores para el gripper](#21-crear-archivo-de-controladores-para-el-gripper)
    - [22. Conectar los controladores del gripper en el archivo de control](#22-conectar-los-controladores-del-gripper-en-el-archivo-de-control)
    - [23. Ajustar rotación inicial del gripper en eef.xacro](#23-ajustar-rotación-inicial-del-gripper-en-eefxacro)
-   - [24. Crear launch file para spawn del UR5 con gripper y objetos en Gazebo]
-   (#24-crear-launch-file-para-spawn-del-UR5-con-gripper-y-objetos-en-gazebo)   
+   - [24. Crear launch file para spawn del UR5 con gripper y objetos en Gazebo](#24-crear-launch-file-para-spawn-del-UR5-con-gripper-y-objetos-en-gazebo)   
 6. [🐍 VI - Control del UR5 Simulado con Python y MoveIt](#-vi--control-del-ur5-simulado-con-python-y-moveit)  
    - [1. Crear script en Python para mover el UR5 con cinemática directa](#1-crear-script-en-python-para-mover-el-ur5-con-cinemática-directa)  
    - [2. Crear script en Python para mover el UR5 con cinemática inversa](#2-crear-script-en-python-para-mover-el-ur5-con-cinemática-inversa)  
