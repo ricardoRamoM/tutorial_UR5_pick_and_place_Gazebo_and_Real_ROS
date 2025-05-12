@@ -2304,6 +2304,9 @@ Da click en la imagen para mostrar un video de la simulacion del pick and place.
 
 ![using_ExternalControl](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/using_ExternalControl.jpeg) 
 
+5. Ahora regresamos a la pantalla principal y ejecutamos el programa que heoms guardado y le damos play para que pueda funcionar.
+
+![running_EC](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/running_EC.jpeg) 
 
 
 ---
@@ -2376,7 +2379,7 @@ Para iniciar realmente el controlador del robot, utilice uno de los archivos de 
 
 Si todo está correcto, te debe salir algo como esto:    
 
-![robot_connected](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/robot_connected.jpeg) 
+![robot_connected](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/robot_connected.png) 
 
 Ocuparemos 2 terminales más:
 - Para ejecutar moveit:
