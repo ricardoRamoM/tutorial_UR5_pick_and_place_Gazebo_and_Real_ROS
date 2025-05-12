@@ -365,15 +365,15 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 - Guardar la configuracion en esa carpeta con el nombre de "config.rviz"
 
 ### 4) Configurar Controladores del Robot
-+ Abrir la carpeta ~/catkin_ws_1/src/ur5_v1/config
-+ Crear el archivo "ur5_controllers.yaml"
+- Abrir la carpeta ~/catkin_ws_1/src/ur5_v1/config
+- Crear el archivo "ur5_controllers.yaml"
     - Checar cual es el tipo de "HardwareInterface" en el archivo.xacro. 
     - En nuestro caso será "EffortController", pero esto quiere decir que necesitaríamos tunnear el PID. Pero, no lo haremos porque UR ya lo hizo. 
-+ Buscar el archivo: ~/catkin_ws_1/src/universal_robots/ur_gazebo/config/ur5_controller.yaml 
-+ Copiar contenido y pegarlo en el que creamos nosotros.
+- Buscar el archivo: ~/catkin_ws_1/src/universal_robots/ur_gazebo/config/ur5_controller.yaml 
+- Copiar contenido y pegarlo en el que creamos nosotros.
 
-[ ] Nota 1: JointTrajectoryController es porque vamos a usar el plugin de RVIZ y ese usa JointTrajectoryController
-{ } Nota 2: Usa un publish_rate alto (125 Hz), lo que puede mejorar la suavidad en simulación. Se puede usar un publish_rate más bajo (50 Hz), suficiente para pruebas, pero menos suave. Esto se ve en esta linea:
+- [ ] Nota 1: JointTrajectoryController es porque vamos a usar el plugin de RVIZ y ese usa JointTrajectoryController
+- { } Nota 2: Usa un publish_rate alto (125 Hz), lo que puede mejorar la suavidad en simulación. Se puede usar un publish_rate más bajo (50 Hz), suficiente para pruebas, pero menos suave. Esto se ve en esta linea:
     publish_rate: &loop_hz 125 
 
 ### 5) Crear Modelos SDF de Objetos
