@@ -15,7 +15,7 @@ Este tutorial te guía paso a paso para simular y ejecutar una tarea de pick and
    - [4. Herramientas adicionales](#4-instalación-de-herramientas-adicionales)
    - [5. Python y dependencias](#5-python-y-dependencias-ros-para-python)
    - [6. Plugin Mimic para el Gripper](#6-instalación-del-plugin-mimic-para-gazebo-robotiq-gripper)
-4. [🛠️ IV - Configuración del Entorno](#-iv--configuración-del-entorno)
+4. [🛠️ IV - Configuración del Entorno](#configuracion-entorno)
    - [1. catkin_ws](#1-creación-y-configuración-del-catkin_ws)
    - [2. Repositorios necesarios](#2-clonado-de-repositorios-ur5-robotiq-moveit-config-etc)
    - [3. Compilación con catkin_make](#3-compilación-con-catkin_make)
