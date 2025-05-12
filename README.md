@@ -347,13 +347,13 @@ Como se indica en la licencia MIT, este software/hardware se proporciona sin nin
 
 ## 👥 Autores del proyecto
 
-- [ ] Ricardo Morales Ramos
+- [ ] Ricardo Ramos Morales
 - [ ] David León Céspedes
 
 ## 📬 Contacto
 
 ¿Tienes dudas o sugerencias?
 
-    📧 Correo electrónico: ricardo.moralesr@udlap.mx
+    📧 Correo electrónico: ricardo.ramosms@udlap.mx
     📧 Correo electrónico: david.leoncs@udlap.mx
 
