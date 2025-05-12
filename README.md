@@ -2391,8 +2391,13 @@ Ocuparemos 2 terminales más:
 	roslaunch ur5_moveit_config moveit_rviz.launch config:=true
 
 ### 6) Mover el robot
-- Ahora ya podremos mover el UR5 con Rviz planeando trayectorias y ejecutándolas. Y a continuación vemos un video.
+- Ahora ya podremos mover el UR5 con Rviz planeando trayectorias y ejecutándolas. Y a continuación vemos un video. 
 
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=0T5xIY5VZes">
+    <img src="https://img.youtube.com/vi/0T5xIY5VZes/0.jpg" alt="Video de pick and place en Gazebo">
+  </a>
+</p>
 
 - Podemos abrir una nueva terminal y desde ahi probar alguno de los códigos básicos que hicimos antes en simulación. Solo en el completo de pick and place tendriamos que quitar el gripper debido a que aun no añadimos lo necesario para poder controlarlo con lo que tenemos.
 Por ejemplo, podemos ejecutar: 
@@ -2401,6 +2406,11 @@ Por ejemplo, podemos ejecutar:
 
 Aquí esta funcionando: 
 
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=izzpvJy8_VY">
+    <img src="https://img.youtube.com/vi/izzpvJy8_VY/0.jpg" alt="Video de pick and place en Gazebo">
+  </a>
+</p>
 
 ## ✅ VIII-Conclusión
 
