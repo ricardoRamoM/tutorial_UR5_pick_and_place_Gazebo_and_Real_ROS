@@ -296,6 +296,9 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 
     roslaunch moveit_setup_assistant setup_assistant.launch
 
+![moveit_assitant](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/moveit_assitant.png)
+
+
     - Dar click en -> Edit Existing MoveIt Configuration Package
     - Poner esta ruta: /home/gazebo-ros/catkin_ws_1/src/universal_robot/ur5_moveit_config
     - Darle click a Load Files
@@ -1477,7 +1480,7 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
         <launch>
 
             <!-- Associate to the robot description parameter, the urdf file that model the robot-->
-            <param name="robot_description" command="$(find xacro)/xacro '$(find ur5_v1)/urdf/ur5_5_gripper.xacro'" /> 
+            <param name="robot_description" command="$(find xacro)/xacro '$(find ur5_v1)/urdf/ur5_1_gripper.xacro'" /> 
 
             <!-- Read the joint value-->
             <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
@@ -1506,8 +1509,73 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 
 ![ur5_gripper_RViz](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/ur5_gripper_RViz.png)
 
-### 17) 
+### 17) Generar paquete MoveIt para UR5 con gripper
+- En esta ruta: /catkin_ws_7/src, crear esta carpeta: ur_gripper_moveit_config	
+- Ejecutar en la terminal: roslaunch moveit_setup_assistant setup_assistant.launch
+	
+	- Create New MoveIt ConfigurationPackage 
+	- Escoger la ruta -> /home/gazebo-ros/catkin_ws_1/src/ur5_v1/urdf/ur5_1_gripper.xacro
+    - Darle click a Load Files
+    - Ir a Self-Collisions -> Generate Collision Matrix
+	- Ir a planning group -> 
+		- Add Group -> Colocar la sig Configuracion
+			- Group Name:	manipulator
+			- Kinematic Solver: kdl_kinematics_plugin/KDLKinematicsPlugin
+			- Group Default Planner: RRT
+			- Add joints -> seleccionar de shoulder_pan_joint al wrist_3_joint (Son 6 en total)-> Save
+			- Add link -> base_link, de shoulder_link a wrist_3_link, flange, tool0 (Son 9 en total)-> Save
+			
+		- Add Group -> Colocar la sig Configuracion
+			- Group Name:	gripper
+			- Kinematic Solver: none
+			- Group Default Planner: none
+			- Add joints -> seleccionar robotiq_85_left_knuckle_joint -> Save
+			- Add link -> seleccionar todos los robotiq_85_ (Son: 1 base, 4 left y 4 right) -> Save
+	
+	- Ir a Robot Poses -> Add pose. Añadir las siguientes:
+		- "home" - Planning Group: manipulator - Todas art en 0.
+		- "up" - Planning Group: manipulator - shoulder_lift_joint=-1.57rad=90°, wrist1= -1.57rad. El resto en 0
+		- "open" - Planning Group: gripper - left_knuckle: 0
+		- "close" - Planning Group: gripper - left_knuckle: 0.8040
+	
+	- Ir a End Effectors -> Add ->
+		End Effector Name -> robotiq_gripper
+		End Effector Group -> gripper
+		Parent Link -> tool0
+	
+	- Ir a  Passive Joints -> 
+		- Añadir -> 
+			- robotiq_85_left_finger_joint
+			- robotiq_85_right_finger_joint
+	
+	- Ir a controllers 
+		- Dejar vacio
+		
+	- Ir a Author Information y llenar los campos solicitados
+	
+	- Ir a Configuration Files -> ajustar ruta a /catkin_ws_1/src/ur_gripper_moveit_config -> Generate Packages
+	
+	- Exit MoveIt Assistant
+	
+-En la nueva carpeta, buscar el archivo con esta ruta /ur_gripper_moveit_config/config/ros_controllers.yaml. Añadir ahí el siguiente código:
 
+        controller_list:
+        - name: "/eff_joint_traj_controller"
+        action_ns: follow_joint_trajectory
+        type: FollowJointTrajectory
+        joints:
+            - shoulder_pan_joint
+            - shoulder_lift_joint
+            - elbow_joint
+            - wrist_1_joint
+            - wrist_2_joint
+            - wrist_3_joint
+
+        - name: "/gripper_controller"
+        action_ns: follow_joint_trajectory
+        type: FollowJointTrajectory
+        joints:
+            - robotiq_85_left_knuckle_joint
 
 
 
