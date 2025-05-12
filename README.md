@@ -48,10 +48,7 @@ Este tutorial te guía paso a paso para simular y ejecutar una tarea de pick and
    - [24. Crear launch file para spawn del robot y objetos en Gazebo](#24-crear-launch-file-para-spawn-del-robot-y-objetos-en-gazebo)
    - [25. Crear script en Python para mover el UR5](#25-crear-script-en-python-para-mover-el-ur5)
 6. [🐍 VI - Control del UR5 Simulado con Python y MoveIt](#-vi--control-del-ur5-simulado-con-python-y-moveit)
-   - [1. Crear script en Python para mover el UR5](#1-crear-script-en-python-para-mover-el-ur5)
 7. [🤖 VII - Ejecución en el Robot UR5 Físico](#-vii--ejecución-en-el-robot-ur5-físico)
-   - [1. Desglose del script Python](#1-desglose-del-script-python)
-   - [2. Comunicación de nodos y control de movimientos](#2-comunicación-de-nodos-y-control-de-movimientos)
 8. [✅ VIII - Conclusión](#-viii--conclusión)
 9. [🚀 IX - Mejoras Futuras](#-ix--mejoras-futuras)
 10. [⚠️ X - Advertencia](#-x--advertencia)
@@ -1998,41 +1995,257 @@ Este script mueve los valores articulares desde q1 hasta q6​, lo que asegura q
 
 
 ### 2) Crear script en Python para mover el UR5 con cinematica inversa
-En este codigo solo se le da el punto del tcp y el robot llega
-Crear archivos python para mover el robot 
-	Codigo simple para mover el ur5
-	En la carpeta de la siguiente ruta ~/catkin_ws_7/src/ur5_v5/scripts
-	Dentro de la carpeta 'scripts' crear la carpeta 'movement'
-	Crear archivo move_1.py
-	Darle permisos de ejecucion al archivo, hay 2 opciones:
-		-En Archivos buscar el archivo python, darle en Propiedades -> Permisos -> Permitir ejecutar el archivo como un programa
-		-En terminal: chmod +x move_1.py
-	Pegar el codigo de abajo	
+Este script toma las coordenadas del TCP (Centro de Herramienta) y hace que el robot se mueva a esa posición usando cinemática inversa.
 
-### 3) Crear un nuevo archivo en 
-	Llamar el archivo'gripper.py'. Este archivo nos servirá para probar el movimiento de la garra.
-	Darle permisos de ejecucion al archivo, hay 2 opciones:
-		-En Archivos buscar el archivo python, darle en Propiedades -> Permisos -> Permitir ejecutar el archivo como un programa
-		-En terminal: chmod +x gripper.py
-	Pegar el codigo de abajo	
+---
+- En la carpeta de la siguiente ruta ~/catkin_ws_7/src/ur5_v5/scripts/movement
+- Crear archivo mv_tcp.py
+- Darle permisos de ejecucion al archivo, hay 2 opciones:
+	- En Archivos buscar el archivo python, darle en Propiedades -> Permisos -> Permitir ejecutar el archivo como un programa
+	- En terminal: chmod +x mv_tcp.py
+- Pegar el codigo de abajo	
+
+        #!/usr/bin/env python3
+
+        import sys
+        import rospy
+        import moveit_commander
+        import geometry_msgs.msg
+        import copy
+        import tf  # ← importante para la conversión
+
+        # Solo le das el punto final y ya te mueve el robot solo a esa posicion, osea hace cinematica inversa
+
+        def main():
+            # Inicializa MoveIt Commander y ROS node
+            moveit_commander.roscpp_initialize(sys.argv)
+            rospy.init_node('pick_and_place_node', anonymous=True)
+
+            # Inicializa el grupo de planificación (asegúrate que el nombre coincida con tu config)
+            arm_group = moveit_commander.MoveGroupCommander("manipulator")
+            arm_group.set_planner_id("RRTConnectkConfigDefault")
+            arm_group.set_planning_time(10)
+
+            # Pose inicial (home)
+            arm_group.set_named_target("home")
+            arm_group.go(wait=True)
+
+            # Pose de 'pick'
+            pick_pose = geometry_msgs.msg.Pose()
+
+            # Define ángulos RPY en radianes
+            # 90 grados → 1.57 radianes
+            roll = -1.57
+            pitch = 0.0
+            yaw =  0.0
+
+            # Convierte RPY a cuaterniones
+            quaternion = tf.transformations.quaternion_from_euler(roll, pitch, yaw)
+
+            # Asigna posición y orientación
+            pick_pose.position.x = 0.85 
+            pick_pose.position.y = 0.45
+            pick_pose.position.z = 0.0
+            pick_pose.orientation.x = quaternion[0]
+            pick_pose.orientation.y = quaternion[1]
+            pick_pose.orientation.z = quaternion[2]
+            pick_pose.orientation.w = quaternion[3]
+
+            arm_group.set_pose_target(pick_pose)
+            arm_group.go(wait=True)
+
+            rospy.sleep(1)  # simula cerrar gripper (aquí agregarías control de pinza real)
+
+            # Pose de 'place'
+            place_pose = copy.deepcopy(pick_pose)
+            place_pose.position.x = 0.7
+            place_pose.position.y = 0.5
+            place_pose.position.z = 0.5
+
+            arm_group.set_pose_target(place_pose)
+            arm_group.go(wait=True)
+
+            rospy.sleep(1)  # simula abrir gripper
+
+            # Regresa a 'home'
+            arm_group.set_named_target("home")
+            arm_group.go(wait=True)
+
+            # Limpia
+            arm_group.stop()
+            arm_group.clear_pose_targets()
+            moveit_commander.roscpp_shutdown()
+
+        if __name__ == '__main__':
+            try:
+                main()
+            except rospy.ROSInterruptException:
+                pass
+
+Para ejecutar el código, recuerden tener ya abierto Gazebo y RViz, y en una nueva terminal, ejecutar este comando:
+
+        rosrun ur5_v1 mv_tcp.py
+
+### 3) Crear un script en python para mover el gripper
+Crea un archivo Python para realizar una operación básica de pick-and-place con el UR5 usando moveit_commander.
+
+---
+- En la carpeta de la siguiente ruta ~/catkin_ws_7/src/ur5_v5/scripts/movement
+- Crear archivo gripper_1.py
+- Darle permisos de ejecucion al archivo, hay 2 opciones:
+	- En Archivos buscar el archivo python, darle en Propiedades -> Permisos -> Permitir ejecutar el archivo como un programa
+	- En terminal: chmod +x gripper_1.py
+- Pegar el codigo de abajo
+
+        #!/usr/bin/env python3
+
+        import rospy
+        from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+
+        def move_gripper(position, duration=2.0):
+            # Inicializa el nodo
+            rospy.init_node('robotiq_gripper_commander')
+
+            # Publicador al controller
+            pub = rospy.Publisher('/gripper_controller/command', JointTrajectory, queue_size=10)
+
+            # Espera al publisher
+            rospy.sleep(1)
+
+            # Prepara mensaje de trayectoria
+            traj = JointTrajectory()
+            traj.joint_names = ['robotiq_85_left_knuckle_joint']
+
+            point = JointTrajectoryPoint()
+            point.positions = [position]  # Solo mandamos el knuckle joint
+            point.time_from_start = rospy.Duration(duration)
+
+            traj.points.append(point)
+
+            # Publica el comando
+            rospy.loginfo(f"Moviendo gripper a {position} rad")
+            pub.publish(traj)
+
+            rospy.sleep(duration + 1)
+
+        if __name__ == '__main__':
+            try:
+                # Ejemplo: cerrar a 0.8 rad, esperar, luego abrir a 0.0 rad
+                move_gripper(0.4)
+                rospy.sleep(3)
+                #move_gripper(0.0)
+            except rospy.ROSInterruptException:
+                pass
 	
-### 4) Nuevo archivo python donde planees el pick and place con el gripper en la siguiente ruta ~/catkin_ws_7/src/ur5_v5/scripts
-	código básico en Python usando moveit_commander para hacer un movimiento simple de pick and place con el UR5
-	Llamar el archivo pick_and_place_1.py 
-	Darle permisos de ejecucion al archivo, hay 2 opciones:
-		-En Archivos buscar el archivo python, darle en Propiedades -> Permisos -> Permitir ejecutar el archivo como un programa
-		-En terminal: chmod +x pick_and_place_1.py
-	Pegar el codigo de abajo		
+### 4) Crear y ejecutar script de Pick & Place con el gripper
+Una vez confirmado que el robot se mueve correctamente con los scripts de cinemática directa e inversa, se procede a crear un nuevo script que combine ambos movimientos para realizar una operación básica de pick and place con el gripper. Este script implementa un movimiento simple de pick and place utilizando la librería moveit_commander.
 
-### 2) ▶️ Ejecución del Script de Pick & Place
+---
+- En la carpeta de la siguiente ruta ~/catkin_ws_7/src/ur5_v5/scripts/movement
+- Crear un nuevo archivo llamado pick_and_place_1.py 
+- Darle permisos de ejecucion al archivo, hay 2 opciones:
+	- En Archivos buscar el archivo python, darle en Propiedades -> Permisos -> Permitir ejecutar el archivo como un programa
+	- En terminal: chmod +x pick_and_place_1.py
+- Pegar el código de abajo		
 
-En terminal:
+            #!/usr/bin/env python3
 
-    roslaunch ur5_moveit_config demo.launch
+            import sys
+            import rospy
+            import moveit_commander
+            from geometry_msgs.msg import Pose
+            from tf.transformations import quaternion_from_euler
 
-Luego, en otra terminal:
+            def open_gripper():
+                # Si tienes control por joint
+                gripper_group.set_named_target("open")
+                gripper_group.go(wait=True)
 
-    rosrun <tu_paquete> ur5_pick_and_place.py
+            def close_gripper():
+                gripper_group.set_named_target("close")
+                gripper_group.go(wait=True)
+
+            def go_to_pose(pose_target):
+                arm_group.set_pose_target(pose_target)
+                plan = arm_group.go(wait=True)
+                arm_group.stop()
+                arm_group.clear_pose_targets()
+
+            def create_pose(x, y, z, roll=0, pitch=0, yaw=0):
+                # Convertir de RPY (roll, pitch, yaw) a quaternion (x, y, z, w)
+                qx, qy, qz, qw = quaternion_from_euler(roll, pitch, yaw)
+                
+                pose = Pose()
+                pose.position.x = x
+                pose.position.y = y
+                pose.position.z = z
+                pose.orientation.x = qx
+                pose.orientation.y = qy
+                pose.orientation.z = qz
+                pose.orientation.w = qw
+                return pose
+
+            if __name__ == "__main__":
+                moveit_commander.roscpp_initialize(sys.argv)
+                rospy.init_node('ur5_pick_and_place', anonymous=True)
+
+                arm_group = moveit_commander.MoveGroupCommander("manipulator")  # nombre de grupo en MoveIt
+                gripper_group = moveit_commander.MoveGroupCommander("gripper")  # nombre de grupo del gripper en MoveIt (ajústalo)
+
+                # Velocidades (opcional)
+                arm_group.set_max_velocity_scaling_factor(0.5)
+                arm_group.set_max_acceleration_scaling_factor(0.5)
+
+                # 1️⃣ Aproach sobre objeto
+                approach_pick = create_pose(0.7, 0.1, 0.3, 0, 3.14, 0)  # ajusta coordenadas
+                pick_pose = create_pose(0.7, 0.1, 0.2, 0, 3.14, 0)      # ajusta coordenadas
+
+                # 2️⃣ Aproach sobre posición de depósito
+            #    approach_place = create_pose(-0.25, 0.65, 0.7, 0, 3.14, 0)  # ajusta coordenadas
+            #   place_pose = create_pose(-0.25, 0.65, 0.6, 0, 3.14, 0)      # ajusta coordenadas
+
+                approach_place = create_pose(-0.5, 0.5, 0.5, 0, 3.14, 0)  # ajusta coordenadas
+                place_pose = create_pose(-0.5, 0.5, 0.4, 0, 3.14, 0)      # ajusta coordenadas
+
+                # 3️⃣ Regresar a la posición "up"
+                arm_group.set_named_target("up")  # Usamos la posición "up" definida
+                arm_group.go(wait=True)
+
+                # Mover al approach_pick
+                go_to_pose(approach_pick)
+
+                # Bajar al pick_pose
+                go_to_pose(pick_pose)
+
+                # Cerrar gripper
+                close_gripper()
+
+                # Subir a approach_pick
+                go_to_pose(approach_pick)
+
+                # Mover al approach_place
+                go_to_pose(approach_place)
+
+                # Bajar al place_pose
+                go_to_pose(place_pose)
+
+                # Abrir gripper
+                open_gripper()
+
+                # Subir a approach_place
+                go_to_pose(approach_place)
+
+                arm_group.set_named_target("up")  # Usamos la posición "up" definida
+                arm_group.go(wait=True)
+
+                rospy.loginfo("Pick and Place completado ")
+
+                moveit_commander.roscpp_shutdown()
+
+
+En una nueva terminal ejecuta el codigo con:
+
+    rosrun ur5_v1 pick_and_place_1.py
 
 
 ## 🤖 VII-Ejecución en el Robot UR5 Físico
