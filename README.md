@@ -2308,7 +2308,8 @@ Teach pendant → `Config. Robot → Red → Dirección IP`
 Ejemplo: `192.168.1.237`
 
 ### B. Asignar IP estática a tu PC
-```bash
+
+bash
 sudo ifconfig eno1 192.168.1.100 netmask 255.255.255.0 up
     Configuración de red y comunicación con el UR5
 
