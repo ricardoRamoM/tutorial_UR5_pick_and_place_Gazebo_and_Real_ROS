@@ -192,6 +192,7 @@ Si ya hiciste esto último, en automatico hará el sourcing en cada nueva termin
 
 ### 5. Crear tu propio paquete (package)
 Crea un paquete donde guardarás tus archivos de control, simulación y scripts ejecutando las siguientes instrucciones en la terminal:
+
     cd ~/catkin_ws/src
     catkin_create_pkg ur5_v1 controller_manager joint_state_controller robot_state_publisher roscpp rospy std_msgs urdf
     cd ..
@@ -200,6 +201,7 @@ Crea un paquete donde guardarás tus archivos de control, simulación y scripts 
 Esto te generará la estructura básica en catkin_ws/src/ur5_V1, donde colocarás tus archivos .launch, URDFs y scripts Python.
 
 Nota: Recordemos que para crear un package, se debe de seguir la siguiente estructura:
+
     catkin_create_pkg  <name_of_package> <dependencies of package>
 
 
