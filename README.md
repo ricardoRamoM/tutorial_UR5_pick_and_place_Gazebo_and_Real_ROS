@@ -2442,11 +2442,10 @@ Descarga del UR5 para gazebo - https://github.com/ros-industrial/universal_robot
 ## 📬 XIII-Contacto
 
 ¿Tienes dudas o sugerencias?
-Para preguntas o sugerencias:
 
 - Asesor encargado de la página: César Martínez Torres
     📧 Correo electrónico: cesar.martinez@udlap.mx
-    
+
 - Redactor del tutorial: 
     📧 Correo electrónico: ricardo.ramosms@udlap.mx
     📧 Correo electrónico: david.leoncs@udlap.mx
