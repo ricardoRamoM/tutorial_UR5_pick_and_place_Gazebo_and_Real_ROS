@@ -314,6 +314,9 @@ EMPY_EXECUTABLE:FILEPATH=EMPY_EXECUTABLE-NOTFOUND
 //Empy script
 EMPY_SCRIPT:STRING=/usr/lib/python3/dist-packages/em.py
 
+//The directory containing a CMake configuration file for Eigen3.
+Eigen3_DIR:PATH=/usr/lib/cmake/eigen3
+
 //Path to a library.
 GMOCK_LIBRARY:FILEPATH=GMOCK_LIBRARY-NOTFOUND
 
@@ -390,6 +393,9 @@ UBUNTU:BOOL=TRUE
 //LSB Distrib - codename tag
 UBUNTU_FOCAL:BOOL=TRUE
 
+//Build integration tests using the start_ursim script
+UR_ROBOT_DRIVER_BUILD_INTEGRATION_TESTS:BOOL=OFF
+
 //Path to a file.
 _gmock_INCLUDES:FILEPATH=/usr/src/googletest/googlemock/include/gmock/gmock.h
 
@@ -408,17 +414,32 @@ actionlib_DIR:PATH=/opt/ros/noetic/share/actionlib/cmake
 //The directory containing a CMake configuration file for actionlib_msgs.
 actionlib_msgs_DIR:PATH=/opt/ros/noetic/share/actionlib_msgs/cmake
 
+//The directory containing a CMake configuration file for angles.
+angles_DIR:PATH=/opt/ros/noetic/share/angles/cmake
+
 //The directory containing a CMake configuration file for boost_headers.
 boost_headers_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/boost_headers-1.71.0
 
 //The directory containing a CMake configuration file for boost_system.
 boost_system_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/boost_system-1.71.0
 
+//The directory containing a CMake configuration file for cartesian_control_msgs.
+cartesian_control_msgs_DIR:PATH=/opt/ros/noetic/share/cartesian_control_msgs/cmake
+
+//The directory containing a CMake configuration file for cartesian_interface.
+cartesian_interface_DIR:PATH=/opt/ros/noetic/share/cartesian_interface/cmake
+
 //The directory containing a CMake configuration file for catkin.
 catkin_DIR:PATH=/opt/ros/noetic/share/catkin/cmake
 
 //The directory containing a CMake configuration file for class_loader.
 class_loader_DIR:PATH=/opt/ros/noetic/share/class_loader/cmake
+
+//The directory containing a CMake configuration file for control_msgs.
+control_msgs_DIR:PATH=/opt/ros/noetic/share/control_msgs/cmake
+
+//The directory containing a CMake configuration file for control_toolbox.
+control_toolbox_DIR:PATH=/opt/ros/noetic/share/control_toolbox/cmake
 
 //The directory containing a CMake configuration file for controller_interface.
 controller_interface_DIR:PATH=/opt/ros/noetic/share/controller_interface/cmake
@@ -511,8 +532,14 @@ gtest_main_LIB_DEPENDS:STATIC=general;gtest;
 //The directory containing a CMake configuration file for hardware_interface.
 hardware_interface_DIR:PATH=/opt/ros/noetic/share/hardware_interface/cmake
 
+//The directory containing a CMake configuration file for industrial_robot_status_interface.
+industrial_robot_status_interface_DIR:PATH=/opt/ros/noetic/share/industrial_robot_status_interface/cmake
+
 //The directory containing a CMake configuration file for joint_state_controller.
 joint_state_controller_DIR:PATH=/opt/ros/noetic/share/joint_state_controller/cmake
+
+//The directory containing a CMake configuration file for joint_trajectory_controller.
+joint_trajectory_controller_DIR:PATH=/opt/ros/noetic/share/joint_trajectory_controller/cmake
 
 //The directory containing a CMake configuration file for kdl_conversions.
 kdl_conversions_DIR:PATH=/opt/ros/noetic/share/kdl_conversions/cmake
@@ -521,7 +548,7 @@ kdl_conversions_DIR:PATH=/opt/ros/noetic/share/kdl_conversions/cmake
 kdl_parser_DIR:PATH=/opt/ros/noetic/share/kdl_parser/cmake
 
 //Path to a library.
-lib:FILEPATH=/opt/ros/noetic/lib/libtf.so
+lib:FILEPATH=/usr/lib/liborocos-kdl.so
 
 //The directory containing a CMake configuration file for message_filters.
 message_filters_DIR:PATH=/opt/ros/noetic/share/message_filters/cmake
@@ -552,6 +579,9 @@ object_recognition_msgs_DIR:PATH=/opt/ros/noetic/share/object_recognition_msgs/c
 
 //The directory containing a CMake configuration file for octomap_msgs.
 octomap_msgs_DIR:PATH=/opt/ros/noetic/share/octomap_msgs/cmake
+
+//The directory containing a CMake configuration file for pass_through_controllers.
+pass_through_controllers_DIR:PATH=/opt/ros/noetic/share/pass_through_controllers/cmake
 
 //The directory containing a CMake configuration file for pluginlib.
 pluginlib_DIR:PATH=/opt/ros/noetic/share/pluginlib/cmake
@@ -655,8 +685,14 @@ rospack_DIR:PATH=/opt/ros/noetic/share/rospack/cmake
 //The directory containing a CMake configuration file for rospy.
 rospy_DIR:PATH=/opt/ros/noetic/share/rospy/cmake
 
+//The directory containing a CMake configuration file for rostest.
+rostest_DIR:PATH=/opt/ros/noetic/share/rostest/cmake
+
 //The directory containing a CMake configuration file for rostime.
 rostime_DIR:PATH=/opt/ros/noetic/share/rostime/cmake
+
+//The directory containing a CMake configuration file for scaled_joint_trajectory_controller.
+scaled_joint_trajectory_controller_DIR:PATH=/opt/ros/noetic/share/scaled_joint_trajectory_controller/cmake
 
 //The directory containing a CMake configuration file for sensor_msgs.
 sensor_msgs_DIR:PATH=/opt/ros/noetic/share/sensor_msgs/cmake
@@ -667,11 +703,20 @@ shape_msgs_DIR:PATH=/opt/ros/noetic/share/shape_msgs/cmake
 //The directory containing a CMake configuration file for soem.
 soem_DIR:PATH=soem_DIR-NOTFOUND
 
+//The directory containing a CMake configuration file for speed_scaling_interface.
+speed_scaling_interface_DIR:PATH=/opt/ros/noetic/share/speed_scaling_interface/cmake
+
+//The directory containing a CMake configuration file for speed_scaling_state_controller.
+speed_scaling_state_controller_DIR:PATH=/opt/ros/noetic/share/speed_scaling_state_controller/cmake
+
 //The directory containing a CMake configuration file for srdfdom.
 srdfdom_DIR:PATH=/opt/ros/noetic/share/srdfdom/cmake
 
 //The directory containing a CMake configuration file for std_msgs.
 std_msgs_DIR:PATH=/opt/ros/noetic/share/std_msgs/cmake
+
+//The directory containing a CMake configuration file for std_srvs.
+std_srvs_DIR:PATH=/opt/ros/noetic/share/std_srvs/cmake
 
 //The directory containing a CMake configuration file for tf2.
 tf2_DIR:PATH=/opt/ros/noetic/share/tf2/cmake
@@ -809,6 +854,24 @@ ur7e_moveit_config_BINARY_DIR:STATIC=/home/gazebo-ros/catkin_ws_7/build/universa
 ur7e_moveit_config_SOURCE_DIR:STATIC=/home/gazebo-ros/catkin_ws_7/src/universal_robot/ur7e_moveit_config
 
 //Value Computed by CMake
+ur_calibration_BINARY_DIR:STATIC=/home/gazebo-ros/catkin_ws_7/build/Universal_Robots_ROS_Driver/ur_calibration
+
+//Value Computed by CMake
+ur_calibration_SOURCE_DIR:STATIC=/home/gazebo-ros/catkin_ws_7/src/Universal_Robots_ROS_Driver/ur_calibration
+
+//The directory containing a CMake configuration file for ur_client_library.
+ur_client_library_DIR:PATH=/opt/ros/noetic/lib/cmake/ur_client_library
+
+//Value Computed by CMake
+ur_dashboard_msgs_BINARY_DIR:STATIC=/home/gazebo-ros/catkin_ws_7/build/Universal_Robots_ROS_Driver/ur_dashboard_msgs
+
+//The directory containing a CMake configuration file for ur_dashboard_msgs.
+ur_dashboard_msgs_DIR:PATH=/home/gazebo-ros/catkin_ws_8/devel/share/ur_dashboard_msgs/cmake
+
+//Value Computed by CMake
+ur_dashboard_msgs_SOURCE_DIR:STATIC=/home/gazebo-ros/catkin_ws_7/src/Universal_Robots_ROS_Driver/ur_dashboard_msgs
+
+//Value Computed by CMake
 ur_description_BINARY_DIR:STATIC=/home/gazebo-ros/catkin_ws_7/build/universal_robot/ur_description
 
 //Value Computed by CMake
@@ -832,6 +895,24 @@ ur_kinematics_BINARY_DIR:STATIC=/home/gazebo-ros/catkin_ws_7/build/universal_rob
 //Value Computed by CMake
 ur_kinematics_SOURCE_DIR:STATIC=/home/gazebo-ros/catkin_ws_7/src/universal_robot/ur_kinematics
 
+//The directory containing a CMake configuration file for ur_msgs.
+ur_msgs_DIR:PATH=/home/gazebo-ros/catkin_ws_8/devel/share/ur_msgs/cmake
+
+//Value Computed by CMake
+ur_robot_driver_BINARY_DIR:STATIC=/home/gazebo-ros/catkin_ws_7/build/Universal_Robots_ROS_Driver/ur_robot_driver
+
+//The directory containing a CMake configuration file for ur_robot_driver.
+ur_robot_driver_DIR:PATH=/home/gazebo-ros/catkin_ws_8/devel/share/ur_robot_driver/cmake
+
+//Value Computed by CMake
+ur_robot_driver_SOURCE_DIR:STATIC=/home/gazebo-ros/catkin_ws_7/src/Universal_Robots_ROS_Driver/ur_robot_driver
+
+//Dependencies for the target
+ur_robot_driver_plugin_LIB_DEPENDS:STATIC=general;ur_client_library::urcl;general;/opt/ros/noetic/lib/libscaled_joint_trajectory_controller.so;general;/opt/ros/noetic/lib/libjoint_trajectory_controller.so;general;/opt/ros/noetic/lib/libcontrol_toolbox.so;general;/opt/ros/noetic/lib/libspeed_scaling_state_controller.so;general;/opt/ros/noetic/lib/librealtime_tools.so;general;/opt/ros/noetic/lib/libtf.so;general;/opt/ros/noetic/lib/libtf2_ros.so;general;/opt/ros/noetic/lib/libmessage_filters.so;general;/opt/ros/noetic/lib/libtf2.so;general;/opt/ros/noetic/lib/libpass_through_controllers.so;general;/opt/ros/noetic/lib/libactionlib.so;general;/opt/ros/noetic/lib/libcontroller_manager.so;general;/opt/ros/noetic/lib/libdynamic_reconfigure_config_init_mutex.so;general;/opt/ros/noetic/lib/libkdl_parser.so;general;/usr/lib/liborocos-kdl.so;general;/opt/ros/noetic/lib/liburdf.so;general;/usr/lib/x86_64-linux-gnu/liburdfdom_sensor.so;general;/usr/lib/x86_64-linux-gnu/liburdfdom_model_state.so;general;/usr/lib/x86_64-linux-gnu/liburdfdom_model.so;general;/usr/lib/x86_64-linux-gnu/liburdfdom_world.so;general;/usr/lib/x86_64-linux-gnu/libtinyxml.so;general;/opt/ros/noetic/lib/libclass_loader.so;general;/usr/lib/x86_64-linux-gnu/libPocoFoundation.so;general;/usr/lib/x86_64-linux-gnu/libdl.so;general;/opt/ros/noetic/lib/libroslib.so;general;/opt/ros/noetic/lib/librospack.so;general;/usr/lib/x86_64-linux-gnu/libpython3.8.so;general;/usr/lib/x86_64-linux-gnu/libboost_program_options.so.1.71.0;general;/usr/lib/x86_64-linux-gnu/libtinyxml2.so;general;/opt/ros/noetic/lib/librosconsole_bridge.so;general;/opt/ros/noetic/lib/libroscpp.so;general;/usr/lib/x86_64-linux-gnu/libpthread.so;general;/usr/lib/x86_64-linux-gnu/libboost_chrono.so.1.71.0;general;/usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.71.0;general;/opt/ros/noetic/lib/librosconsole.so;general;/opt/ros/noetic/lib/librosconsole_log4cxx.so;general;/opt/ros/noetic/lib/librosconsole_backend_interface.so;general;/usr/lib/x86_64-linux-gnu/liblog4cxx.so;general;/usr/lib/x86_64-linux-gnu/libboost_regex.so.1.71.0;general;/opt/ros/noetic/lib/libroscpp_serialization.so;general;/opt/ros/noetic/lib/libxmlrpcpp.so;general;/opt/ros/noetic/lib/librostime.so;general;/usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.71.0;general;/opt/ros/noetic/lib/libcpp_common.so;general;/usr/lib/x86_64-linux-gnu/libboost_system.so.1.71.0;general;/usr/lib/x86_64-linux-gnu/libboost_thread.so.1.71.0;general;/usr/lib/x86_64-linux-gnu/libconsole_bridge.so.0.4;
+
+//Dependencies for the target
+urcl_log_handler_LIB_DEPENDS:STATIC=general;/opt/ros/noetic/lib/libscaled_joint_trajectory_controller.so;general;/opt/ros/noetic/lib/libjoint_trajectory_controller.so;general;/opt/ros/noetic/lib/libcontrol_toolbox.so;general;/opt/ros/noetic/lib/libspeed_scaling_state_controller.so;general;/opt/ros/noetic/lib/librealtime_tools.so;general;/opt/ros/noetic/lib/libtf.so;general;/opt/ros/noetic/lib/libtf2_ros.so;general;/opt/ros/noetic/lib/libmessage_filters.so;general;/opt/ros/noetic/lib/libtf2.so;general;/opt/ros/noetic/lib/libpass_through_controllers.so;general;/opt/ros/noetic/lib/libactionlib.so;general;/opt/ros/noetic/lib/libcontroller_manager.so;general;/opt/ros/noetic/lib/libdynamic_reconfigure_config_init_mutex.so;general;/opt/ros/noetic/lib/libkdl_parser.so;general;/usr/lib/liborocos-kdl.so;general;/opt/ros/noetic/lib/liburdf.so;general;/usr/lib/x86_64-linux-gnu/liburdfdom_sensor.so;general;/usr/lib/x86_64-linux-gnu/liburdfdom_model_state.so;general;/usr/lib/x86_64-linux-gnu/liburdfdom_model.so;general;/usr/lib/x86_64-linux-gnu/liburdfdom_world.so;general;/usr/lib/x86_64-linux-gnu/libtinyxml.so;general;/opt/ros/noetic/lib/libclass_loader.so;general;/usr/lib/x86_64-linux-gnu/libPocoFoundation.so;general;/usr/lib/x86_64-linux-gnu/libdl.so;general;/opt/ros/noetic/lib/libroslib.so;general;/opt/ros/noetic/lib/librospack.so;general;/usr/lib/x86_64-linux-gnu/libpython3.8.so;general;/usr/lib/x86_64-linux-gnu/libboost_program_options.so.1.71.0;general;/usr/lib/x86_64-linux-gnu/libtinyxml2.so;general;/opt/ros/noetic/lib/librosconsole_bridge.so;general;/opt/ros/noetic/lib/libroscpp.so;general;/usr/lib/x86_64-linux-gnu/libpthread.so;general;/usr/lib/x86_64-linux-gnu/libboost_chrono.so.1.71.0;general;/usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.71.0;general;/opt/ros/noetic/lib/librosconsole.so;general;/opt/ros/noetic/lib/librosconsole_log4cxx.so;general;/opt/ros/noetic/lib/librosconsole_backend_interface.so;general;/usr/lib/x86_64-linux-gnu/liblog4cxx.so;general;/usr/lib/x86_64-linux-gnu/libboost_regex.so.1.71.0;general;/opt/ros/noetic/lib/libroscpp_serialization.so;general;/opt/ros/noetic/lib/libxmlrpcpp.so;general;/opt/ros/noetic/lib/librostime.so;general;/usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.71.0;general;/opt/ros/noetic/lib/libcpp_common.so;general;/usr/lib/x86_64-linux-gnu/libboost_system.so.1.71.0;general;/usr/lib/x86_64-linux-gnu/libboost_thread.so.1.71.0;general;/usr/lib/x86_64-linux-gnu/libconsole_bridge.so.0.4;general;ur_client_library::urcl;
+
 //The directory containing a CMake configuration file for urdf.
 urdf_DIR:PATH=/opt/ros/noetic/share/urdf/cmake
 
@@ -840,6 +921,9 @@ visualization_msgs_DIR:PATH=/opt/ros/noetic/share/visualization_msgs/cmake
 
 //The directory containing a CMake configuration file for xmlrpcpp.
 xmlrpcpp_DIR:PATH=/opt/ros/noetic/share/xmlrpcpp/cmake
+
+//The directory containing a CMake configuration file for yaml-cpp.
+yaml-cpp_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/yaml-cpp
 
 
 ########################
@@ -991,7 +1075,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=22
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=25
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
@@ -1035,7 +1119,7 @@ CMAKE_UNAME:INTERNAL=/usr/bin/uname
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 //Details about finding Boost
-FIND_PACKAGE_MESSAGE_DETAILS_Boost:INTERNAL=[/usr/lib/x86_64-linux-gnu/cmake/Boost-1.71.0/BoostConfig.cmake][cfound components: system ][v1.71.0()]
+FIND_PACKAGE_MESSAGE_DETAILS_Boost:INTERNAL=[/usr/lib/x86_64-linux-gnu/cmake/Boost-1.71.0/BoostConfig.cmake][c ][v1.71.0()]
 //Details about finding PY_em
 FIND_PACKAGE_MESSAGE_DETAILS_PY_em:INTERNAL=[/usr/lib/python3/dist-packages/em.py][v()]
 //Details about finding PythonInterp

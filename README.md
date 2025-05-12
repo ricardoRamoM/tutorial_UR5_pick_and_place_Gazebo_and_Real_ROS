@@ -247,7 +247,7 @@ Si ya hiciste esto último, en automatico hará el sourcing en cada nueva termin
 Crea un paquete donde guardarás tus archivos de control, simulación y scripts ejecutando las siguientes instrucciones en la terminal:
 
     cd ~/catkin_ws_1/src
-    catkin_create_pkg ur5_v1 controller_manager joint_state_controller robot_state_publisher roscpp rospy std_msgs urdf
+    catkin_create_pkg ur5_v1 controller_manager joint_state_controller robot_state_publisher roscpp rospy std_msgs urdf moveit_commander 
     cd ..
     catkin_make
 
@@ -2289,9 +2289,28 @@ Da click en la imagen para mostrar un video de la simulacion del pick and place.
    - Anota la **IP del robot** y el **Host IP** que ahí se muestra.
         - En nuestro caso el IP del robot fue: 192.168.1.237
 
+4. En un programa nuevo añadir el UrCap de External control y guardar el programa.
+
+![using_ExternalControl](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/using_ExternalControl.jpeg) 
+
+
+
 ---
 
-### 2) Configuración de red
+### 2) Instalación de paquetes necesarios en la PC
+Ejecutar en la terminal estos comandos:
+
+    cd ~/catkin_ws_1
+    git clone https://github.com/UniversalRobots/Universal_Robots_ROS_Driver.git src/Universal_Robots_ROS_Driver
+    sudo apt install ros-noetic-ur-robot-driver ros-noetic-ur-calibration ros-noetic-rqt-joint-trajectory-controller
+    sudo apt update -qq
+    sudo apt install python3-vcstool
+    vcs import --input src/Universal_Robots_ROS_Driver/.noetic.rosinstall src
+    rosdep update
+    rosdep install --from-paths src --ignore-src -y
+    cd ~/catkin_make_1
+    catkin_make
+
 
 
 ### 3) Configuración de red
@@ -2307,15 +2326,57 @@ Conectar el robot por cable ethernet a tu computadora a través del puerto ubica
 Teach pendant → `Config. Robot → Red → Dirección IP`  
 Ejemplo: `192.168.1.237`
 
-### B. Asignar IP estática a tu PC
+#### B. Verificar condifguración de red de tu PC
+En tu computadora entrar a la parte de red y asegurarse que la parte de cabledo este desactivada.
 
-bash
-sudo ifconfig eno1 192.168.1.100 netmask 255.255.255.0 up
-    Configuración de red y comunicación con el UR5
+![config_red_pc](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/config_red_pc.png) 
 
-    Lanzar el robot real con MoveIt
 
-    Adaptar y ejecutar el mismo script Python en el robot físico
+#### C. Asignar IP estática a tu PC
+Cambia la IP de tu PC a 192.168.1.x (donde x es un número distinto a 237, por ejemplo, 192.168.1.100). Ejecuta el siguiente comando desde la terminal:
+
+    sudo ifconfig eno1 192.168.1.100 netmask 255.255.255.0 up
+    
+#### D. Verificar la conexión.
+Intenta hacer un ping al UR5 para verificar la conexión con este comando desde la terminal:
+	
+    ping 192.168.1.237
+
+Si todo está bien configurado, deberías recibir una respuesta de ese tipo:
+
+	64 bytes from 192.168.1.237: icmp_seq=230 ttl=64 time=0.370 ms
+	64 bytes from 192.168.1.237: icmp_seq=231 ttl=64 time=0.503 ms
+    
+### 4) Extracción de configuración del robot físico
+Ejecuta esta instruccion que te creara el archivo .yaml con la configuracion del robot: 
+
+    roslaunch ur_calibration calibration_correction.launch \ 
+    robot_ip:=192.168.1.237 \ 
+    target_filename:="/home/gazebo-ros/catkin_ws_1/my_robot_calibration.yaml"
+    
+Para pasar esa calibración al launch file:
+
+    roslaunch ur_robot_driver ur5_bringup.launch robot_ip:=192.168.1.237 kinematics_config:=/home/gazebo-ros/catkin_ws_1/my_robot_calibration.yaml
+
+### 5) Lanzamiento físico del robot
+Para iniciar realmente el controlador del robot, utilice uno de los archivos de inicio existentes. En la Terminal 1  para hacer la conexion de launch entre la computadora y el UR5:
+
+    roslaunch ur_robot_driver ur5_bringup.launch robot_ip:=192.168.1.237
+
+Si todo está correcto, te debe salir algo como esto:    
+
+![robot_connected](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/robot_connected.jpeg) 
+
+
+Ocuparemos 2 terminales más:
+- Para ejecutar moveit:
+
+	roslaunch ur5_moveit_config moveit_planning_execution.launch limited:=true
+
+- Y para lanzar Rviz:
+
+	roslaunch ur5_moveit_config moveit_rviz.launch config:=true
+
 
 
 
@@ -2353,6 +2414,10 @@ Futuras versiones del trabajo implementaran mejoras en la resolucion de la cinem
 
 Como se indica en la licencia MIT, este software/hardware se proporciona sin ningún tipo de garantía. Por lo tanto, ningún colaborador es responsable de cualquier daño a tus componentes, materiales, PC, etc...
 ## 📚 XI-Recursos Adicionales
+
+Driver para controlar fisicamente el UR5 - https://github.com/UniversalRobots/Universal_Robots_ROS_Driver
+
+Descarga del UR5 para gazebo - https://github.com/ros-industrial/universal_robot
 
 ## 👥 XII-Autores del proyecto
 

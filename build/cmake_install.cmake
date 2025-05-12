@@ -147,6 +147,7 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/gazebo-ros/catkin_ws_7/build/gtest/cmake_install.cmake")
   include("/home/gazebo-ros/catkin_ws_7/build/universal_robot/universal_robots/cmake_install.cmake")
+  include("/home/gazebo-ros/catkin_ws_7/build/Universal_Robots_ROS_Driver/ur_dashboard_msgs/cmake_install.cmake")
   include("/home/gazebo-ros/catkin_ws_7/build/ur_gripper_moveit_config/cmake_install.cmake")
   include("/home/gazebo-ros/catkin_ws_7/build/universal_robot/ur10_moveit_config/cmake_install.cmake")
   include("/home/gazebo-ros/catkin_ws_7/build/universal_robot/ur10e_moveit_config/cmake_install.cmake")
@@ -164,6 +165,8 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("/home/gazebo-ros/catkin_ws_7/build/ur5_v5/cmake_install.cmake")
   include("/home/gazebo-ros/catkin_ws_7/build/robotiq_gripper/cmake_install.cmake")
   include("/home/gazebo-ros/catkin_ws_7/build/universal_robot/ur_kinematics/cmake_install.cmake")
+  include("/home/gazebo-ros/catkin_ws_7/build/Universal_Robots_ROS_Driver/ur_robot_driver/cmake_install.cmake")
+  include("/home/gazebo-ros/catkin_ws_7/build/Universal_Robots_ROS_Driver/ur_calibration/cmake_install.cmake")
 
 endif()
 

@@ -118,7 +118,7 @@ endif()
 
 set(libraries "ur3_kin;ur5_kin;ur10_kin;ur3_moveit_plugin;ur5_moveit_plugin;ur10_moveit_plugin;ur3e_kin;ur5e_kin;ur10e_kin;ur16e_kin;ur20_kin;ur20_moveit_plugin;ur30_kin;ur30_moveit_plugin;/usr/lib/x86_64-linux-gnu/libboost_system.so.1.71.0")
 foreach(library ${libraries})
-  # keep build configuration keywords, target names and absolute libraries as-is
+  # keep build configuration keywords, generator expressions, target names, and absolute libraries as-is
   if("${library}" MATCHES "^(debug|optimized|general)$")
     list(APPEND ur_kinematics_LIBRARIES ${library})
   elseif(${library} MATCHES "^-l")
@@ -146,6 +146,8 @@ foreach(library ${libraries})
       target_link_options("${interface_target_name}" INTERFACE "${library}")
     endif()
     list(APPEND ur_kinematics_LIBRARIES "${interface_target_name}")
+  elseif(${library} MATCHES "^\\$<")
+    list(APPEND ur_kinematics_LIBRARIES ${library})
   elseif(TARGET ${library})
     list(APPEND ur_kinematics_LIBRARIES ${library})
   elseif(IS_ABSOLUTE ${library})
