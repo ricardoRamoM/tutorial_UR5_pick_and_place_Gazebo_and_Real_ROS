@@ -204,7 +204,9 @@ Para verificar la simuación del UR5 en Gazebo y RVIZ. Abre tres terminales para
 En RViz:
 - Cambia Fixed Frame a base_link. Gloal Options -> Fixed Frame -> base_link
 - Añade RobotModel desde el botón Add. Add -> RobotModel
-	
+
+![UR5_Gazebo_Rviz](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/ur5_gazebo_rviz.png)
+
 Para verificar la simulación del gripper en RVIZ en una nueva terminal ejecutamos esto: 
 
     roslaunch robotiq_gripper spawn_robotiq_85_gripper.launch
@@ -215,7 +217,28 @@ Para verificar la simulación del gripper en RVIZ en una nueva terminal ejecutam
 Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + C
 
 
+## 🧪 Simulación del Pick and Place
 
+### 1) Visualizar el Robot en RViz con Archivo XACRO
+
+### 2) Crear Launch para Mostrar el Robot en RViz
+
+### 3) Configurar Visualización en RViz y Guardar Configuración
+
+
+## 🤖 Conexión con el Robot Físico UR5
+
+    Configuración de red y comunicación con el UR5
+
+    Lanzar el robot real con MoveIt
+
+    Adaptar y ejecutar el mismo script Python en el robot físico
+
+## 🧩 Estructura del Código y Explicación del Script
+
+    Desglose del script Python
+
+    Cómo se comunican los nodos, controlan los movimientos y se integran con MoveIt
 
 
 
@@ -247,10 +270,11 @@ Resumen de lo que se logró construir, aprendizajes obtenidos y posibles mejoras
 
     Enlistar las mejoras a realizar
 
-## ⚠️ Advertencia
+## 📌 Advertencias y consejos
 
 Como se indica en la licencia MIT, este software/hardware se proporciona sin ningún tipo de garantía. Por lo tanto, ningún colaborador es responsable de cualquier daño a tus componentes, materiales, PC, etc...
 ## 📚 Recursos Adicionales
+
 
 ## 👥 Autores del proyecto
 
