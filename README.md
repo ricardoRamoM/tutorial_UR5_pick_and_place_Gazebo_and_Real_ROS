@@ -313,14 +313,14 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 	
     - Se hace pegando lo siguiente en ese lugar: 
 
-    <!-- Fix the cobot to the world -->
-    <link name="world"/>
+            <!-- Fix the cobot to the world -->
+            <link name="world"/>
 
 
-    <joint name="fixed" type="fixed">
-        <parent link="world"/>
-        <child link="base_link"/>   
-    </joint>
+            <joint name="fixed" type="fixed">
+                <parent link="world"/>
+                <child link="base_link"/>   
+            </joint>
 
 
 ### 2) Crear Launch para Mostrar el Robot en RViz
@@ -328,24 +328,24 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 - Crear dentro, el archivo "rviz_ur5.launch"
 - En ese archivo se coloca lo siguiente, revisar que donde dice find si aparezca el nombre que tu tienes de tu carpeta y que el archivo xacro igual se llame igual que el que tu tienes: 
 
-    <?xml version="1.0"?>
-    <launch>
+        <?xml version="1.0"?>
+        <launch>
 
-        <!-- Associate to the robot description parameter, the urdf file that model the robot-->
-        <param name="robot_description" command = "$(find xacro)/xacro --inorder $(find ur5_v1)/urdf/ur5_1.xacro" />
+            <!-- Associate to the robot description parameter, the urdf file that model the robot-->
+            <param name="robot_description" command = "$(find xacro)/xacro --inorder $(find ur5_v1)/urdf/ur5_1.xacro" />
 
-        <!-- Read the joint value-->
-        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
-        
-        <!-- Visualization in Rviz-->
-        <node name="rviz" pkg="rviz" type="rviz" /> 
+            <!-- Read the joint value-->
+            <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+            
+            <!-- Visualization in Rviz-->
+            <node name="rviz" pkg="rviz" type="rviz" /> 
 
-        <!-- Visualization of the use_gui for playing with joint-->
-        <arg name="use_gui" default="true" />
-        <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"  output="screen" unless="$(arg use_gui)" />
-        <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"  output="screen" if="$(arg use_gui)"/>    
-        
-    </launch>
+            <!-- Visualization of the use_gui for playing with joint-->
+            <arg name="use_gui" default="true" />
+            <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"  output="screen" unless="$(arg use_gui)" />
+            <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"  output="screen" if="$(arg use_gui)"/>    
+            
+        </launch>
 
 ### 3) Configurar Visualización en RViz y Guardar Configuración
 - Para ejecutar RViz, ejecutar en terminal esto:
@@ -1438,7 +1438,78 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 
             </launch>
 
-### 15)             
+### 15) Crear Xacro personalizado del UR5 con gripper integrado   
+- Crear un nuevo archivo en la carpeta /ur5_v1/urdf llamado "ur5_1_gripper.xacro"	
+- Copiar y pegar todo el contenido del archivo existente "ur5_1.xacro"
+- Añadir despues de <robot name="ur5_robot"> y el comentario grande, o después de la línea 61 lo siguiente:
+        
+        <xacro:include filename="$(find ur5_v1)/urdf/eef.xacro"/>
+
+- Reemplazar la línea 6 por la siguiente:
+        
+        <robot name="ur5_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">	
+
+    
+- Crear en la misma carpeta el archivo "eef.xacro"
+- En ese archivo pegar el siguiente codigo:        
+
+        <?xml version="1.0" ?>
+        <!--End Efector xacro file-->
+        <robot name="robotiq_85_gripper" xmlns:xacro="http://ros.org/wiki/xacro">
+
+            
+            <!-- Manda a llamar el xacro directo de robotiq_gripper package-->
+            <xacro:include filename="$(find robotiq_gripper)/urdf/robotiq_85_gripper.urdf.xacro" />
+
+            <!--This is where is gonna be the base link of the gripper in 
+                relation to the tool0(which is the endefector of the robot)-->
+            <xacro:robotiq_85_gripper prefix="" parent="tool0" >
+                <origin xyz = "0 0 0" rpy = "0 -1.57 0" /> <!--Posicion inicial del gripper-->
+            </xacro:robotiq_85_gripper>
+        </robot>
+
+### 16) Lanzar el UR5 con gripper en RViz
+- Crear un launch para que aparezca el gripper como el End Effector en RViz
+- Crear archivo llamado "rviz_ur5_gripper.launch"
+- Copiar y pegar el codigo de abajo 
+
+        <?xml version="1.0"?>
+        <launch>
+
+            <!-- Associate to the robot description parameter, the urdf file that model the robot-->
+            <param name="robot_description" command="$(find xacro)/xacro '$(find ur5_v1)/urdf/ur5_5_gripper.xacro'" /> 
+
+            <!-- Read the joint value-->
+            <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+            
+            <!-- Visualization in Rviz-->
+            <node name="rviz" pkg="rviz" type="rviz" />
+            <!--<node name="rviz" pkg="rviz" type="rviz" output="screen"
+                args="-d $(find ur5_v1)/config/config.rviz" />
+            -->
+
+            <!-- Visualization of the use_gui for playing with joint-->
+            <arg name="use_gui" default="true" />
+            <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"  output="screen" unless="$(arg use_gui)" />
+            <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"  output="screen" if="$(arg use_gui)"/>    
+
+        </launch>
+    
+- Para ejecutarlo y mostrar el gripperEjecutar en terminal:
+
+    cd ~/catkin_ws_1
+	catkin_make	
+    roslaunch ur5_v1 rviz_ur5_gripper.launch
+
+	- En Gloal Options -> Fixed Frame -> base_link
+	- Abajo dar click en Add -> RobotModel
+
+![ur5_gripper_RViz](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/ur5_gripper_RViz.png)
+
+### 17) 
+
+
+
 
 -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 ### 
