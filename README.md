@@ -47,8 +47,19 @@ Este tutorial te guía paso a paso para simular y ejecutar una tarea de pick and
    - [23. Ajustar rotación inicial del gripper en eef.xacro](#23-ajustar-rotación-inicial-del-gripper-en-eefxacro)
    - [24. Crear launch file para spawn del robot y objetos en Gazebo](#24-crear-launch-file-para-spawn-del-robot-y-objetos-en-gazebo)
    - [25. Crear script en Python para mover el UR5](#25-crear-script-en-python-para-mover-el-ur5)
-6. [🐍 VI - Control del UR5 Simulado con Python y MoveIt](#-vi--control-del-ur5-simulado-con-python-y-moveit)
-7. [🤖 VII - Ejecución en el Robot UR5 Físico](#-vii--ejecución-en-el-robot-ur5-físico)
+6. [🐍 VI - Control del UR5 Simulado con Python y MoveIt](#-vi--control-del-ur5-simulado-con-python-y-moveit)  
+   - [1. Crear script en Python para mover el UR5 con cinemática directa](#1-crear-script-en-python-para-mover-el-ur5-con-cinemática-directa)  
+   - [2. Crear script en Python para mover el UR5 con cinemática inversa](#2-crear-script-en-python-para-mover-el-ur5-con-cinemática-inversa)  
+   - [3. Crear script en Python para controlar el gripper Robotiq 85](#3-crear-script-en-python-para-controlar-el-gripper-robotiq-85)  
+   - [4. Ejecutar secuencia Pick & Place con el gripper](#4-ejecutar-secuencia-pick--place-con-el-gripper)
+7. [🤖 VII - Ejecución en el Robot UR5 Físico](#-vii--ejecución-en-el-robot-ur5-físico)  
+   - [1. Requisitos para conexión con el UR5 físico](#1-requisitos-para-conexión-con-el-ur5-físico)  
+   - [2. Configurar IP y red estática entre PC y UR5](#2-configurar-ip-y-red-estática-entre-pc-y-ur5)  
+   - [3. Probar conexión con el UR5 mediante ping y UR dashboard](#3-probar-conexión-con-el-ur5-mediante-ping-y-ur-dashboard)  
+   - [4. Lanzar MoveIt para el UR5 físico](#4-lanzar-moveit-para-el-ur5-físico)  
+   - [5. Mover el UR5 físico con MoveIt y RViz](#5-mover-el-ur5-físico-con-moveit-y-rviz)  
+   - [6. Controlar el gripper físico desde ROS](#6-controlar-el-gripper-físico-desde-ros)  
+   - [7. Ejecutar scripts de pick & place en el UR5 real](#7-ejecutar-scripts-de-pick--place-en-el-ur5-real)
 8. [✅ VIII - Conclusión](#-viii--conclusión)
 9. [🚀 IX - Mejoras Futuras](#-ix--mejoras-futuras)
 10. [⚠️ X - Advertencia](#-x--advertencia)
@@ -2367,7 +2378,6 @@ Si todo está correcto, te debe salir algo como esto:
 
 ![robot_connected](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/robot_connected.jpeg) 
 
-
 Ocuparemos 2 terminales más:
 - Para ejecutar moveit:
 
@@ -2377,25 +2387,16 @@ Ocuparemos 2 terminales más:
 
 	roslaunch ur5_moveit_config moveit_rviz.launch config:=true
 
+### 6) Mover el robot
+- Ahora ya podremos mover el UR5 con Rviz planeando trayectorias y ejecutándolas. Y a continuación vemos un video.
 
 
+- Podemos abrir una nueva terminal y desde ahi probar alguno de los códigos básicos que hicimos antes en simulación. Solo en el completo de pick and place tendriamos que quitar el gripper debido a que aun no añadimos lo necesario para poder controlarlo con lo que tenemos.
+Por ejemplo, podemos ejecutar: 
 
+    rosrun ur5_v1 mv_qs_ur5.py
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Aquí esta funcionando: 
 
 
 ## ✅ VIII-Conclusión
@@ -2412,7 +2413,9 @@ Futuras versiones del trabajo implementaran mejoras en la resolucion de la cinem
 
 ## ⚠️ X-Advertencia
 
-Como se indica en la licencia MIT, este software/hardware se proporciona sin ningún tipo de garantía. Por lo tanto, ningún colaborador es responsable de cualquier daño a tus componentes, materiales, PC, etc...
+Al mover el robot con la computadora, asegurarte de tener el paro de emergencia a la mano para detenerlo en caso de seguir una ruta donde vaya a chocar. 
+
+
 ## 📚 XI-Recursos Adicionales
 
 Driver para controlar fisicamente el UR5 - https://github.com/UniversalRobots/Universal_Robots_ROS_Driver
