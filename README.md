@@ -1245,6 +1245,151 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 ![TCP_RViz_1](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/tcp_rviz_1.png)
 
 ### 13) Ver Articulaciones q1-q6 en RViz
+- Para poder ver cuanto giran las articulaciones q1-q6 en rviz. 
+- Usamos dos scripts de python y los guardamos en una nueva carpeta llamada 'config' dentro de 'scripts. Es decir, en esta ruta: ~/catkin_ws_1/src/ur5_v1/scripts/config
+- Los llamamos joint_state_marker_rad.py y joint_state_marker_deg.py
+    - Les damos permisos de ejecucion manualmente o con:  chmod +x rpy_marker_rad.py
+- Les pegamos los códigos de abajo
+- Para probarlo, ejecutamos en terminales diferentes cada uno de los siguientes comandos:
+    - roslaunch ur5_v1 ur5_gazebo_add_objects_1.launch
+    - roslaunch ur5_v1 ur5_moveit_with_rviz_1.launch
+    - rosrun ur5_v1 joint_state_marker_rad.py
+    - rosrun ur5_v1 joint_state_marker_deg.py
+- En RViz: Add → Marker → MarkerTopic /joint_state_marker_rad o /joint_state_marker_deg	
+- Guardar el archivo: config.rviz . Nota: no crear un nuevo archivo.rviz, solo guardar el que ya teniamos
+
+- [ ] Código de joint_state_marker_rad.py: 
+        #!/usr/bin/env python3
+
+        import rospy
+        from sensor_msgs.msg import JointState
+        from visualization_msgs.msg import Marker
+
+        class JointStateMarker:
+            def __init__(self):
+                rospy.init_node('joint_state_marker_rad')
+                self.pub = rospy.Publisher('/joint_state_marker_rad', Marker, queue_size=10)
+                rospy.Subscriber('/joint_states', JointState, self.callback)
+
+                self.base_frame = "base_link"
+
+            def callback(self, msg):
+                name_to_position = dict(zip(msg.name, msg.position))
+
+                # Obtener los valores articulares en radianes
+                q1 = name_to_position.get('shoulder_pan_joint', 0)
+                q2 = name_to_position.get('shoulder_lift_joint', 0)
+                q3 = name_to_position.get('elbow_joint', 0)
+                q4 = name_to_position.get('wrist_1_joint', 0)
+                q5 = name_to_position.get('wrist_2_joint', 0)
+                q6 = name_to_position.get('wrist_3_joint', 0)
+
+                # Gripper (fijo aparte)
+                gripper = name_to_position.get('robotiq_85_left_knuckle_joint', 0)
+
+                # Preparar texto alineado
+                text = (
+                    f"q1: {q1:<7.3f}  q4: {q4:<7.3f}\n"
+                    f"q2: {q2:<7.3f}  q5: {q5:<7.3f}\n"
+                    f"q3: {q3:<7.3f}  q6: {q6:<7.3f}\n"
+                    f"Gripper: {gripper:.3f}\n"
+                )
+
+                # Crear el marcador
+                marker = Marker()
+                marker.header.frame_id = self.base_frame
+                marker.header.stamp = rospy.Time.now()
+                marker.ns = "joint_text"
+                marker.id = 0
+                marker.type = Marker.TEXT_VIEW_FACING
+                marker.action = Marker.ADD
+
+                marker.pose.position.x = 0.0
+                marker.pose.position.y = -0.1
+                marker.pose.position.z = 0.3
+                marker.pose.orientation.w = 1.0
+
+                marker.scale.z = 0.05
+                marker.color.r = 1.0
+                marker.color.g = 1.0
+                marker.color.b = 1.0
+                marker.color.a = 1.0
+
+                marker.text = text
+
+                self.pub.publish(marker)
+
+        if __name__ == '__main__':
+            JointStateMarker()
+            rospy.spin()
+
+
+- [ ] Código de joint_state_marker_deg.py:
+        #!/usr/bin/env python3
+
+        import rospy
+        from sensor_msgs.msg import JointState
+        from visualization_msgs.msg import Marker
+        import math
+
+        class JointStateMarker:
+            def __init__(self):
+                rospy.init_node('joint_state_marker_deg')
+                self.pub = rospy.Publisher('/joint_state_marker_deg', Marker, queue_size=10)
+                rospy.Subscriber('/joint_states', JointState, self.callback)
+
+                self.base_frame = "base_link"
+
+            def callback(self, msg):
+                name_to_position = dict(zip(msg.name, msg.position))
+
+                # Convertir a grados los joints principales
+                q1 = math.degrees(name_to_position.get('shoulder_pan_joint', 0))
+                q2 = math.degrees(name_to_position.get('shoulder_lift_joint', 0))
+                q3 = math.degrees(name_to_position.get('elbow_joint', 0))
+                q4 = math.degrees(name_to_position.get('wrist_1_joint', 0))
+                q5 = math.degrees(name_to_position.get('wrist_2_joint', 0))
+                q6 = math.degrees(name_to_position.get('wrist_3_joint', 0))
+
+                # Gripper (fijo aparte)
+                gripper = math.degrees(name_to_position.get('robotiq_85_left_knuckle_joint', 0))
+
+                # Preparar texto alineado
+                text = (
+                    f"q1: {q1:<7.1f}  q4: {q4:<7.1f}\n"
+                    f"q2: {q2:<7.1f}  q5: {q5:<7.1f}\n"
+                    f"q3: {q3:<7.1f}  q6: {q6:<7.1f}\n"
+                    f"Gripper: {gripper:.1f}\n"
+                )
+
+                # Crear el marcador
+                marker = Marker()
+                marker.header.frame_id = self.base_frame
+                marker.header.stamp = rospy.Time.now()
+                marker.ns = "joint_text"
+                marker.id = 0
+                marker.type = Marker.TEXT_VIEW_FACING
+                marker.action = Marker.ADD
+
+                marker.pose.position.x = 0.0
+                marker.pose.position.y = -0.1
+                marker.pose.position.z = 0.3
+                marker.pose.orientation.w = 1.0
+
+                marker.scale.z = 0.05
+                marker.color.r = 1.0
+                marker.color.g = 1.0
+                marker.color.b = 1.0
+                marker.color.a = 1.0
+
+                marker.text = text
+
+                self.pub.publish(marker)
+
+        if __name__ == '__main__':
+            JointStateMarker()
+            rospy.spin()
+
 
 
 ### 14)  Incluir Todos los Scripts en el Launch de MoveIt + RViz
