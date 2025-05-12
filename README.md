@@ -1919,9 +1919,110 @@ Después, abrimos otra terminal y ejecutamos ur5_gripper_moveit_with_rviz_1.laun
 
 ## 🧩 VI-Control del UR5 Simulado con Python y MoveIt
 
-### 1) Crear script en Python para mover el UR5
+### 1) Crear script en Python para mover el UR5 con cinematica directa
+
+Este script mueve los valores articulares desde q1 hasta q6​, lo que asegura que el robot puede moverse correctamente usando un archivo Python.
+
+---
+
+- En la carpeta ~/catkin_ws_1/src/ur5_v1/scripts, crea una subcarpeta llamada movement.
+- Dentro de la carpeta movement, crea el archivo mv_qs_ur5.py.py.
+- Dale permisos de ejecución al archivo con una de las siguientes opciones:
+    - Opción 1: Desde el explorador de archivos, haz clic derecho sobre el archivo, selecciona "Propiedades", ve a "Permisos" y marca "Permitir ejecutar el archivo como un programa".
+    Opción 2: Usa el siguiente comando en la terminal:
+    
+        chmod +x mv_qs_ur5.py.py
+
+- Pega el siguiente código dentro del archivo mv_qs_ur5.py.
 
 
+        #!/usr/bin/env python3
+
+        import sys
+        import rospy
+        import moveit_commander
+        from math import pi
+
+        def main():
+            # Inicializa moveit_commander y nodo ROS
+            moveit_commander.roscpp_initialize(sys.argv)
+            rospy.init_node('move_ur5_simple_node', anonymous=True)
+
+            # Crea objetos de MoveIt
+            robot = moveit_commander.RobotCommander()
+            scene = moveit_commander.PlanningSceneInterface()
+            group_name = "manipulator"  # Nombre del grupo de joints para el UR5
+            move_group = moveit_commander.MoveGroupCommander(group_name)
+
+            # Muestra información del robot
+            rospy.loginfo("Grado de libertad disponibles: %s", move_group.get_joints())
+
+            # Define una posición objetivo (valores en radianes para cada articulación)
+            joint_goal = move_group.get_current_joint_values()
+            joint_goal[0] = 0
+            joint_goal[1] = -pi/2
+            joint_goal[2] = pi/2
+            joint_goal[3] = -pi/2
+            joint_goal[4] = 0
+            joint_goal[5] = 0
+
+            # Mueve el brazo a esa posición
+            move_group.go(joint_goal, wait=True)
+
+            # Detiene cualquier movimiento residual
+            move_group.stop()
+
+            # Finaliza MoveIt
+            moveit_commander.roscpp_shutdown()
+
+        if __name__ == '__main__':
+            try:
+                main()
+            except rospy.ROSInterruptException:
+                pass
+
+**Pasos para ejecutar el script:**
+1. Asegurarte de tener ejecutándose en dos terminales Gazebo y MoveIt con Rviz. Recuerda que se hace con estos dos comados:
+
+    roslaunch ur5_v1 ur5_gripper_gazebo_add_objects_1.launch
+    roslaunch ur5_v1 ur5_gripper_moveit_with_rviz_1.launch
+
+2. Ejecuta los archivos Python o C++ para mover el robot con la siguiente estructura de comando:
+
+        rosrun <nombre_del_paquete> <nombre_del_ejecutable> 
+
+    En nuestro caso, quedaría asi: 
+
+        rosrun ur5_v1 mv_qs_ur5.py
+
+
+
+### 2) Crear script en Python para mover el UR5 con cinematica inversa
+En este codigo solo se le da el punto del tcp y el robot llega
+Crear archivos python para mover el robot 
+	Codigo simple para mover el ur5
+	En la carpeta de la siguiente ruta ~/catkin_ws_7/src/ur5_v5/scripts
+	Dentro de la carpeta 'scripts' crear la carpeta 'movement'
+	Crear archivo move_1.py
+	Darle permisos de ejecucion al archivo, hay 2 opciones:
+		-En Archivos buscar el archivo python, darle en Propiedades -> Permisos -> Permitir ejecutar el archivo como un programa
+		-En terminal: chmod +x move_1.py
+	Pegar el codigo de abajo	
+
+### 3) Crear un nuevo archivo en 
+	Llamar el archivo'gripper.py'. Este archivo nos servirá para probar el movimiento de la garra.
+	Darle permisos de ejecucion al archivo, hay 2 opciones:
+		-En Archivos buscar el archivo python, darle en Propiedades -> Permisos -> Permitir ejecutar el archivo como un programa
+		-En terminal: chmod +x gripper.py
+	Pegar el codigo de abajo	
+	
+### 4) Nuevo archivo python donde planees el pick and place con el gripper en la siguiente ruta ~/catkin_ws_7/src/ur5_v5/scripts
+	código básico en Python usando moveit_commander para hacer un movimiento simple de pick and place con el UR5
+	Llamar el archivo pick_and_place_1.py 
+	Darle permisos de ejecucion al archivo, hay 2 opciones:
+		-En Archivos buscar el archivo python, darle en Propiedades -> Permisos -> Permitir ejecutar el archivo como un programa
+		-En terminal: chmod +x pick_and_place_1.py
+	Pegar el codigo de abajo		
 
 ### 2) ▶️ Ejecución del Script de Pick & Place
 
