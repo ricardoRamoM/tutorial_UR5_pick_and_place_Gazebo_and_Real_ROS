@@ -348,7 +348,7 @@ Como se indica en la licencia MIT, este software/hardware se proporciona sin nin
 ## 👥 Autores del proyecto
 
 - [ ] Ricardo Morales Ramos
-- [ ] David León Cespedes
+- [ ] David León Céspedes
 
 ## 📬 Contacto
 
