@@ -924,6 +924,17 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
                         args="-d $(find ur5_v1)/config/config.rviz" />
                 </launch>
 
+- Ejecutar 2 terminales y en cada uno cada una de las sig instrucciones
+    - roslaunch ur5_v1 ur5_gazebo_1.launch
+    - roslaunch ur5_v1 ur5_moveit_with_rviz_1.launch
+- Para poder probar que se carguen los objetos en el entorno del paso anterior ejecutamos esto en una nueva 3er Terminal:
+	- rosrun ur5_v1 spawn_objects_no_launch.py
+- Después con el de python, se mostraran los objetos en Gazebo.	Puedes borrarlos del entorno en gazebo para volver a ejecutar el archivo python y ver su nueva ubicacion o parametros que cambiaste. Si no llegas a borrar un objeto y vuelves a ejecutar el codigo, no volvera a aparecer nuevamente, simplemente lo omitirá y se pasará al siguiente objeto
+
+- [ ] NOTA: La simulacion en gazebo debe de estar en 'play' antes de ejecutar la 2da terminal con RViz y MoveIt.
+
+![gazebo_play](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/gazebo_play.png)
+
 ### 8) Spawnear Objetos Desde Launch
 
 
