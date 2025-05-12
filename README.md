@@ -1113,7 +1113,7 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 - En RViz: Add → Marker → MarkerTopic /rpy_marker_rad o /rpy_marker_deg
 - Guardar el archivo: config.rviz .Nota: no crear un nuevo archivo.rviz, solo guardar el que ya teniamos
 
-- [] NOTA: Tambien Para ver posicion y orientacion del robot:
+- [ ] NOTA: Tambien Para ver posicion y orientacion del robot:
 	- [ ] En terminal se puede con esta línea:
 
 		rosrun tf tf_echo base_link tool0
@@ -1125,7 +1125,7 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
                         in RPY (radian) [1.571, -0.000, 1.544]
                         in RPY (degree) [89.992, -0.007, 88.444]
 
-	- [ ]En gazebo se puede ver, en wrist_3_link -> pose
+	- [ ] En gazebo se puede ver, en wrist_3_link -> pose
 
 - [ ] Código en rpy_marker_rad.py:
 
@@ -1242,6 +1242,8 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 
 ![TCP_RViz](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/tcp_rviz.png)
 
+![TCP_RViz_1](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/tcp_rviz_1.png)
+
 ### 13) Ver Articulaciones q1-q6 en RViz
 
 
@@ -1249,6 +1251,7 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 
 
 
+-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 ### 
 ### 25. Ajustes para visualizar correctamente el Gripper 🛠️🤖
 
