@@ -3,7 +3,8 @@
 Este tutorial te guía paso a paso para simular y ejecutar una tarea de pick and place utilizando el brazo robótico UR5 y el gripper Robotiq 2F-85, integrando herramientas como Gazebo, MoveIt, RViz y Python en ROS Noetic sobre Ubuntu 20.04. Comenzarás configurando un entorno de simulación funcional y terminarás controlando el robot físico desde una computadora remota, aplicando los mismos scripts desarrollados en el entorno virtual. Ideal para quienes buscan unir teoría, simulación y práctica real en robótica colaborativa.
 
 ---
-## 📑 Índice
+
+<h2 id="indice">📑 Índice</h2>
 
 1. [📋 I - Requisitos Previos](#-i--requisitos-previos)
 2. [📖 II - Introducción](#-ii--introducción)
@@ -28,30 +29,38 @@ Este tutorial te guía paso a paso para simular y ejecutar una tarea de pick and
    - [4. Configurar controladores](#4-configurar-controladores-del-robot)
    - [5. Crear modelos SDF](#5-crear-modelos-sdf-de-objetos)
    - [6. Script para spawnear objetos](#6-crear-script-para-spawnear-objetos)
-   - [7. Crear Launches de Simulación y Planificación](#7-crear-launches-de-simulación-y-planificación)  
-   - [8. Spawnear Objetos Desde Launch](#8-spawnear-objetos-desde-launch)  
-   - [9. Añadir Delay Antes de Spawnear Objetos](#9-añadir-delay-antes-de-spawnear-objetos)  
-   - [10. Establecer Pose Inicial del Robot con Python](#10-establecer-pose-inicial-del-robot-con-python)  
-   - [11. Lanzar Simulación y Spawneo de Objetos](#11-lanzar-simulación-y-spawneo-de-objetos)  
-   - [12. Ver Posición y Orientación en RPY en RViz](#12-ver-posición-y-orientación-en-rpy-en-rviz)  
-   - [13. Ver Articulaciones q1-q6 en RViz](#13-ver-articulaciones-q1-q6-en-rviz)  
-   - [14. Incluir Todos los Scripts en el Launch de MoveIt + RViz](#14-incluir-todos-los-scripts-en-el-launch-de-moveit--rviz)  
-6. [🔌 VI - Conexión con el Robot Físico UR5](#-vii--conexión-con-el-robot-físico-ur5)  
-   - [1. Configuración de red y comunicación con el UR5](#1-configuración-de-red-y-comunicación-con-el-ur5)  
-   - [2. Lanzar el robot real con MoveIt](#2-lanzar-el-robot-real-con-moveit)  
-   - [3. Adaptar y ejecutar el script en el robot físico](#3-adaptar-y-ejecutar-el-script-en-el-robot-físico)  
-
-7. [🧩 VII - Estructura del Código y Explicación del Script](#-viii--estructura-del-código-y-explicación-del-script)  
-   - [1. Desglose del script Python](#1-desglose-del-script-python)  
-   - [2. Comunicación de nodos y control de movimientos](#2-comunicación-de-nodos-y-control-de-movimientos)  
-
-8. [✅ VIII - Conclusión](#-ix--conclusión)  
-9. [🚀 IX - Mejoras Futuras](#-x--mejoras-futuras)  
-10. [⚠️ X - Advertencia](#-xi--advertencia)  
-11. [📚 XI - Recursos Adicionales](#-xii--recursos-adicionales)  
-12. [👥 XII - Autores del Proyecto](#-xiii--autores-del-proyecto)  
-13. [📬 XIII - Contacto](#-xiv--contacto)  
-
+   - [7. Crear Launches de Simulación y Planificación](#7-crear-launches-de-simulación-y-planificación)
+   - [8. Spawnear Objetos Desde Launch](#8-spawnear-objetos-desde-launch)
+   - [9. Añadir Delay Antes de Spawnear Objetos](#9-añadir-delay-antes-de-spawnear-objetos)
+   - [10. Establecer Pose Inicial del Robot con Python](#10-establecer-pose-inicial-del-robot-con-python)
+   - [11. Lanzar Simulación y Spawneo de Objetos](#11-lanzar-simulación-y-spawneo-de-objetos)
+   - [12. Ver Posición y Orientación en RPY en RViz](#12-ver-posición-y-orientación-en-rpy-en-rviz)
+   - [13. Ver Articulaciones q1-q6 en RViz](#13-ver-articulaciones-q1-q6-en-rviz)
+   - [14. Incluir Todos los Scripts en el Launch de MoveIt + RViz](#14-incluir-todos-los-scripts-en-el-launch-de-moveit--rviz)
+   - [15. Añadir Plugin Mimic en el archivo URDF del gripper](#15-añadir-plugin-mimic-en-el-archivo-urdf-del-gripper)
+   - [16. Verificar movimiento de los dedos del gripper en RViz](#16-verificar-movimiento-de-los-dedos-del-gripper-en-rviz)
+   - [17. Incluir URDF del gripper en el XACRO principal del UR5](#17-incluir-urdf-del-gripper-en-el-xacro-principal-del-ur5)
+   - [18. Incluir el gripper en la configuración de MoveIt](#18-incluir-el-gripper-en-la-configuración-de-moveit)
+   - [19. Lanzar el robot con gripper en Gazebo](#19-lanzar-el-robot-con-gripper-en-gazebo)
+   - [20. Visualizar el robot con gripper en MoveIt y RViz](#20-visualizar-el-robot-con-gripper-en-moveit-y-rviz)
+   - [21. Crear archivo de controladores para el gripper](#21-crear-archivo-de-controladores-para-el-gripper)
+   - [22. Conectar los controladores del gripper en el archivo de control](#22-conectar-los-controladores-del-gripper-en-el-archivo-de-control)
+   - [23. Ajustar rotación inicial del gripper en eef.xacro](#23-ajustar-rotación-inicial-del-gripper-en-eefxacro)
+   - [24. Crear launch file para spawn del robot y objetos en Gazebo](#24-crear-launch-file-para-spawn-del-robot-y-objetos-en-gazebo)
+   - [25. Crear script en Python para mover el UR5](#25-crear-script-en-python-para-mover-el-ur5)
+6. [🔌 VI - Conexión con el Robot Físico UR5](#-vi--conexión-con-el-robot-físico-ur5)
+   - [1. Configuración de red y comunicación con el UR5](#1-configuración-de-red-y-comunicación-con-el-ur5)
+   - [2. Lanzar el robot real con MoveIt](#2-lanzar-el-robot-real-con-moveit)
+   - [3. Adaptar y ejecutar el script en el robot físico](#3-adaptar-y-ejecutar-el-script-en-el-robot-físico)
+7. [🧩 VII - Estructura del Código y Explicación del Script](#-vii--estructura-del-código-y-explicación-del-script)
+   - [1. Desglose del script Python](#1-desglose-del-script-python)
+   - [2. Comunicación de nodos y control de movimientos](#2-comunicación-de-nodos-y-control-de-movimientos)
+8. [✅ VIII - Conclusión](#-viii--conclusión)
+9. [🚀 IX - Mejoras Futuras](#-ix--mejoras-futuras)
+10. [⚠️ X - Advertencia](#-x--advertencia)
+11. [📚 XI - Recursos Adicionales](#-xi--recursos-adicionales)
+12. [👥 XII - Autores del Proyecto](#-xii--autores-del-proyecto)
+13. [📬 XIII - Contacto](#-xiii--contacto)
 ---
 
 ## 📋 I-Requisitos Previos
@@ -168,7 +177,9 @@ Configurar Gazebo para encontrar el plugin:
     echo 'export GAZEBO_PLUGIN_PATH=$GAZABO_PLUGIN_PATH:/usr/local/lib' >> ~/.bashrc
     source ~/.bashrc
 
-## 🛠️ IV-Configuración del entorno 
+
+<h2 id="configuracion-entorno">🛠️ IV - Configuración del Entorno</h2>
+
 ### 1. Creación y configuración del catkin_ws_1
 Si aún no tienes un workspace de ROS configurado, sigue estos pasos:
 
@@ -1963,17 +1974,15 @@ Luego, en otra terminal:
 
 ## ✅ VIII-Conclusión
 
-Resumen de lo que se logró construir, aprendizajes obtenidos y posibles mejoras o versiones futuras del proyecto.
-
 Como se pudo observar la implementación de la simulacion de un Pick and Place a traves de ROS con el entorno de simulacion Gazebo fue exitosa con la previa configuracion de todo el workspace para su debido funcionamiento, con esto se pudo denotar el fuerte uso y aplicaciones que tiene el Robotics Operating System el cual nos ayuda a la comunicación y descripción de elementos de robotica que pueden tener un uso simulado como con su implementación física. Asi con esto  El UR5 es un brazo robotico con 6GDL el cual nos ayudo a comprender mas sobre como funciona ROS a la hora de marcar trayectorias y la resolucion de ciertas posiciones para nuestro espacio de trabajo.
 
 Futuras versiones del trabajo implementaran mejoras en la resolucion de la cinematica inversa del entorno que tenemos, asi con esto la adaptación de MoveIt con los parametros de nuestro workspace y el añadimiento del gripper en la implementación fisica.
 
-## 🔜 IX-Mejoras futuras
+## 🔜 IX-Trabajo futuro
 
 - [ ] Implementacion fisica del gripper Robotiq 2F-85
 - [ ] Resolucion de la cinematica Inversa de acuerdo a las limitaciones del propio WorkSpace
-- [ ] Pick And Place mejorado para una mejor y mas rapida trayectoria con movimientos mas adecuados y suaves para su rapida solución.
+- [ ] Pick And Place mejorado para una mejor y más rápida trayectoria con movimientos mas adecuados y suaves para su rapida solución.
 
 ## ⚠️ X-Advertencia
 
