@@ -33,7 +33,7 @@ Este tutorial te guía paso a paso para simular y ejecutar una tarea de pick and
    - [9. Añadir Delay Antes de Spawnear Objetos](#9-añadir-delay-antes-de-spawnear-objetos)  
    - [10. Establecer Pose Inicial del Robot con Python](#10-establecer-pose-inicial-del-robot-con-python)  
    - [11. Lanzar Simulación y Spawneo de Objetos](#11-lanzar-simulación-y-spawneo-de-objetos)  
-   - [12. Ver Orientación en RPY en RViz](#12-ver-orientación-en-rpy-en-rviz)  
+   - [12. Ver Posición y Orientación en RPY en RViz](#12-ver-posición-y-orientación-en-rpy-en-rviz)  
    - [13. Ver Articulaciones q1-q6 en RViz](#13-ver-articulaciones-q1-q6-en-rviz)  
    - [14. Incluir Todos los Scripts en el Launch de MoveIt + RViz](#14-incluir-todos-los-scripts-en-el-launch-de-moveit--rviz)  
 6. [🔌 VI - Conexión con el Robot Físico UR5](#-vii--conexión-con-el-robot-físico-ur5)  
@@ -273,6 +273,7 @@ Para verificar la simuación del UR5 en Gazebo y RVIZ. Abre tres terminales para
 En RViz:
 - Cambia Fixed Frame a base_link. Gloal Options -> Fixed Frame -> base_link
 - Añade RobotModel desde el botón Add. Add -> RobotModel
+- Añade Motion PLanning desde el botón Add para poder mover el robot. Add -> Motion PLanning
 
 ![UR5_Gazebo_Rviz](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/ur5_gazebo_rviz.png)
 
@@ -924,7 +925,7 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
                         args="-d $(find ur5_v1)/config/config.rviz" />
                 </launch>
 
-- Ejecutar 2 terminales y en cada uno cada una de las sig instrucciones
+- Ejecutar 2 terminales y en cada uno cada una de las sig instrucciones:
     - roslaunch ur5_v1 ur5_gazebo_1.launch
     - roslaunch ur5_v1 ur5_moveit_with_rviz_1.launch
 - Para poder probar que se carguen los objetos en el entorno del paso anterior ejecutamos esto en una nueva 3er Terminal:
@@ -1007,7 +1008,7 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 
 ### 9) Añadir Delay Antes de Spawnear Objetos
 - Crear nuevo archivo python para colocar los objetos 5 segundos despues de colocar el robot
-	- En la carpeta 'config' dentro de 'scripts', osea en ~/catkin_ws_1/src/ur5_v5/scripts/config
+	- En la carpeta 'config' dentro de 'scripts', osea en ~/catkin_ws_1/src/ur5_v1/scripts/config
 	- Crear un archivo llamado 'delayed_spawn.py'
 	- Darle permisos de ejecucion al archivo, hay 2 opciones:
 		- En Archivos buscar el archivo python, darle en Propiedades -> Permisos -> Permitir ejecutar el archivo como un programa
@@ -1037,7 +1038,6 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 	- En terminal: chmod +x 'ur5_set_initial_pose.py'
 - Copiar y pegar el siguiente código.
 
-**************************************
         #!/usr/bin/env python3
 
         import rospy
@@ -1080,21 +1080,167 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
             wait_for_controller()
             send_initial_pose()
 
-**************************************            
-
 - Crear una copia del archivo 'ur5_gazebo_1.launch' y renombrarlo 'ur5_gazebo_2.launch'
 - Añadir a ese launch "ur5_gazebo_2.launch" lo siguiente:
 
-**************************************
-    <!-- Establecer postura inicial con script Python -->
-    <node name="set_initial_pose" pkg="ur5_v1" type="ur5_set_initial_pose.py" output="screen"/>            
-**************************************
+        <!-- Establecer postura inicial con script Python -->
+        <node name="set_initial_pose" pkg="ur5_v1" type="ur5_set_initial_pose.py" output="screen"/>            
 
 ### 11) Lanzar Simulación y Spawneo de Objetos
+- Crear nuevo archivo launch para poner el robot y luego los objetos
+- En la carpeta launch crear un nuevo archivo llamado 'ur5_gazebo_add_objects_1.launch'
+	
+        <?xml version="1.0"?>
+        <launch>
+            <!-- Incluye el launch principal del robot -->
+            <include file="$(find ur5_v1)/launch/ur5_gazebo_2.launch" />
+
+            <!-- Ejecuta el script delay que luego lanza spawn_objects.launch -->
+            <node name="delayed_spawn" pkg="ur5_v1" type="delayed_spawn.py" output="screen" />
+        </launch>
+
+### 12) Ver Posición y Orientación en RPY en RViz
+- Para poder ver la orientacion en rpy del TCP en vez de quaterniones que te da rviz, y tambien para ver la posición del TCP en rviz en pantalla.
+-Usamos dos scripts de python y los guardamos en una nueva carpeta llamada 'config' dentro de 'scripts'. Es decir, en esta ruta: ~/catkin_ws_1/src/ur5_v1/scripts/config
+- Los llamamos rpy_marker_rad.py y rpy_marker_deg.py
+	- Les damos permisos de ejecucion manualmente o con:  chmod +x rpy_marker_rad.py
+- Les pegamos los códigos de abajo
+- Para probarlo, ejecutamos en terminales diferentes cada uno de los siguientes comandos:
+    - roslaunch ur5_v1 ur5_gazebo_add_objects_1.launch
+    - roslaunch ur5_v1 ur5_moveit_with_rviz_1.launch
+	- rosrun ur5_v1 rpy_marker_rad.py
+	- rosrun ur5_v1 rpy_marker_deg.py
+- En RViz: Add → Marker → MarkerTopic /rpy_marker_rad o /rpy_marker_deg
+- Guardar el archivo: config.rviz .Nota: no crear un nuevo archivo.rviz, solo guardar el que ya teniamos
+
+- [] NOTA: Tambien Para ver posicion y orientacion del robot:
+	- [ ] En terminal se puede con esta línea:
+
+		rosrun tf tf_echo base_link tool0
+
+        - Te debe de salir esto:
+            At time 1746069792.500
+            - Translation: [0.817, 0.192, -0.005]
+            - Rotation: in Quaternion [0.507, 0.493, 0.493, 0.507]
+                        in RPY (radian) [1.571, -0.000, 1.544]
+                        in RPY (degree) [89.992, -0.007, 88.444]
+
+	- [ ]En gazebo se puede ver, en wrist_3_link -> pose
+
+- [ ] Código en rpy_marker_rad.py:
+
+        #!/usr/bin/env python3
+
+        import rospy
+        import tf
+        from visualization_msgs.msg import Marker
+        import math
+
+        def publish_rpy():
+            rospy.init_node('rpy_marker_rad', anonymous=True)
+            marker_pub = rospy.Publisher('rpy_marker_rad', Marker, queue_size=10)
+            listener = tf.TransformListener()
+            rate = rospy.Rate(10)
+
+            while not rospy.is_shutdown():
+                try:
+                    (trans, rot) = listener.lookupTransform('base_link', 'tool0', rospy.Time(0))
+                    roll, pitch, yaw = tf.transformations.euler_from_quaternion(rot)
+                    
+                    text = (
+                        f"x: {trans[0]:<7.3f} roll: {roll:<6.2f}\n"
+                        f"y: {trans[1]:<7.3f} pitch: {pitch:<6.2f}\n"
+                        f"z: {trans[2]:<7.3f} yaw: {yaw:<6.2f}\n"
+                    )
+
+                    marker = Marker()
+                    marker.header.frame_id = 'base_link'
+                    marker.header.stamp = rospy.Time.now()
+                    marker.type = Marker.TEXT_VIEW_FACING
+                    marker.action = Marker.ADD
+                    marker.pose.position.x = trans[0]
+                    marker.pose.position.y = trans[1]
+                    marker.pose.position.z = trans[2] + 0.35
+                    marker.scale.z = 0.05
+                    marker.color.r = 1.0
+                    marker.color.g = 1.0
+                    marker.color.b = 1.0
+                    marker.color.a = 1.0
+                    marker.text = text
+
+                    marker_pub.publish(marker)
+                except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                    continue
+
+                rate.sleep()
+
+        if __name__ == '__main__':
+            try:
+                publish_rpy()
+            except rospy.ROSInterruptException:
+                pass
+
+- [ ] Código de rpy_marker_deg.py: 
+
+        #!/usr/bin/env python3
+
+        import rospy
+        import tf
+        from visualization_msgs.msg import Marker
+        import math
+
+        def publish_rpy():
+            rospy.init_node('rpy_marker_deg', anonymous=True)
+            marker_pub = rospy.Publisher('rpy_marker_deg', Marker, queue_size=10)
+            listener = tf.TransformListener()
+            rate = rospy.Rate(10)
+
+            while not rospy.is_shutdown():
+                try:
+                    (trans, rot) = listener.lookupTransform('base_link', 'tool0', rospy.Time(0))
+                    roll, pitch, yaw = tf.transformations.euler_from_quaternion(rot)
+                    
+                    roll_deg = math.degrees(roll)
+                    pitch_deg = math.degrees(pitch)
+                    yaw_deg = math.degrees(yaw)
+                    
+                    text = (
+                        f"x: {trans[0]:<7.3f} roll: {roll_deg:<6.2f}\n"
+                        f"y: {trans[1]:<7.3f} pitch: {pitch_deg:<6.2f}\n"
+                        f"z: {trans[2]:<7.3f} yaw: {yaw_deg:<6.2f}"
+                    )
+
+                    marker = Marker()
+                    marker.header.frame_id = 'base_link'
+                    marker.header.stamp = rospy.Time.now()
+                    marker.type = Marker.TEXT_VIEW_FACING
+                    marker.action = Marker.ADD
+                    marker.pose.position.x = trans[0]
+                    marker.pose.position.y = trans[1]
+                    marker.pose.position.z = trans[2] + 0.35
+                    marker.scale.z = 0.05
+                    marker.color.r = 1.0
+                    marker.color.g = 1.0
+                    marker.color.b = 1.0
+                    marker.color.a = 1.0
+                    marker.text = text
+
+                    marker_pub.publish(marker)
+                except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                    continue
+
+                rate.sleep()
+
+        if __name__ == '__main__':
+            try:
+                publish_rpy()
+            except rospy.ROSInterruptException:
+                pass
+        	
 
 
-### 12) Ver Orientación en RPY en RViz
 
+![TCP_RViz](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/tcp_rviz.png)
 
 ### 13) Ver Articulaciones q1-q6 en RViz
 
@@ -1103,6 +1249,326 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 
 
 
+### 
+### 25. Ajustes para visualizar correctamente el Gripper 🛠️🤖
+
+Estos pasos corrigen errores comunes relacionados con el uso del plugin y la configuración de los *joints* del gripper Robotiq 85.
+
+---
+Reemplazar plugin incorrecto en archivos URDF
+
+Abre y edita los siguientes archivos:
+
+    - /home/gazebo-ros/catkin_ws/src/ur_gripper_moveit_config/config/gazebo_ur5_robot.urdf`
+    - /home/gazebo-ros/catkin_ws/src/robotiq_gripper/urdf/robotiq_85_gripper.transmission.xacro`
+
+### Cambios a realizar:
+Busca y elimina todas las instancias del siguiente plugin incorrecto:
+
+
+    libroboticsgroup_upatras_gazebo_mimic_joint_plugin
+
+Y reemplázalas por el plugin correcto:
+
+    libroboticsgroup_gazebo_mimic_joint_plugin
+
+Abre y edita los siguientes archivos:
+
+    /home/gazebo-ros/catkin_ws/src/ur_gripper_moveit_config/config/gazebo_ur5_robot.urdf
+
+    /home/gazebo-ros/catkin_ws/src/robotiq_gripper/urdf/robotiq_85_gripper.urdf.xacro
+
+Cambios a realizar:
+Busca las líneas que definen los siguientes joints:
+
+    <joint name="robotiq_85_left_finger_joint" type="continuous">
+    <joint name="${prefix}robotiq_85_left_finger_joint" type="continuous">
+    <joint name="robotiq_85_right_finger_joint" type="continuous">
+    <joint name="${prefix}robotiq_85_right_finger_joint" type="continuous">
+
+Y cámbialas a:
+
+    <joint name="robotiq_85_left_finger_joint" type="fixed">
+    <joint name="${prefix}robotiq_85_left_finger_joint" type="fixed">
+    <joint name="robotiq_85_right_finger_joint" type="fixed">
+    <joint name="${prefix}robotiq_85_right_finger_joint" type="fixed">
+
+✅ Esto evitará problemas con la simulación al corregir definiciones erróneas en los dedos del gripper.
+
+Compilar cambios:
+
+cd ~/catkin_ws
+catkin_make
+
+### 26. Añadir configuración para el Gripper 🦾📄
+
+Ahora crearás un nuevo archivo de configuración para controlar el gripper **Robotiq 85** junto con el UR5.
+
+---
+
+Duplicar archivo de controladores
+
+Haz una copia del archivo actual de controladores:
+
+cd ~/catkin_ws/src/ur5_v5/config
+cp ur5_controllers.yaml ur5_gripper_controllers.yaml
+
+Abre ur5_gripper_controllers.yaml y añade al final del archivo el siguiente bloque de código:
+
+    gripper_controller:
+    type: position_controllers/JointTrajectoryController
+    joints:
+        - robotiq_85_left_knuckle_joint
+    gains:
+        robotiq_85_left_knuckle_joint: {p: 100,  d: 1, i: 1, i_clamp: 1}
+    constraints:
+        goal_time: 0.6
+        stopped_velocity_tolerance: 0.05
+        robotiq_85_left_knuckle_joint: {trajectory: 0.1, goal: 0.1}
+    stop_trajectory_duration: 0.5
+    state_publish_rate:  25
+    action_monitor_rate: 10
+
+✅ Con esto ya tienes el controlador del gripper configurado.
+Este bloque define una trayectoria controlada para el robotiq_85_left_knuckle_joint, permitiendo el control básico de apertura y cierre del gripper en simulación.
+
+### 27. Crear nuevo archivo Launch para el Gripper en Gazebo 🦾🚀
+
+Vamos a generar un nuevo `launch` que cargue el modelo del UR5 con el **gripper Robotiq 85** en Gazebo.
+
+---
+
+Copiar archivo base
+
+Ubícate en la carpeta de `launch` de tu paquete y crea una copia del archivo existente:
+
+cd ~/catkin_ws/src/ur5_v5/launch
+cp ur5_gazebo_2.launch ur5_gripper_gazebo_1.launch
+
+Cambiar el archivo .xacro (línea 5)
+De:
+    <param name="robot_description" command="$(find xacro)/xacro '$(find ur5_v5)/urdf/ur5_5.xacro'" />
+
+A:
+    <param name="robot_description" command="$(find xacro)/xacro '$(find ur5_v5)/urdf/ur5_5_gripper.xacro'" />
+
+Cambiar el archivo de controladores (línea 32)
+
+    <rosparam file="$(find ur5_v5)/config/ur5_controllers.yaml" command="load"/>
+
+Añadir el controlador del gripper a los args
+De:
+    args="joint_state_controller 
+    eff_joint_traj_controller 
+    --timeout 60" />
+A:
+    args="joint_state_controller 
+    eff_joint_traj_controller 
+    gripper_controller 
+    --timeout 60" />
+
+Código final del archivo ur5_gripper_gazebo_1.launch
+
+    <?xml version="1.0"?>
+    <launch>
+
+        <!-- Cargar el modelo UR5 -->
+        <param name="robot_description" command="$(find xacro)/xacro '$(find ur5_v5)/urdf/ur5_5_gripper.xacro'" /> 
+    
+        <!--Spawn Robot in Gazebo-->
+        <arg name="x" default="0" />
+        <arg name="y" default="0" />
+        <arg name="z" default="1.01" />
+
+        <!-- put world file as argument-->
+        <arg name="world_file" default = "$(find ur5_v5)/worlds/my_custom_world.world" />
+
+        <!-- Lanzar Gazebo con tu mundo -->
+        <include file="$(find gazebo_ros)/launch/empty_world.launch">
+            <arg name="paused" value="false"/>
+            <arg name="gui" value="true"/>
+            <arg name="use_sim_time" value="true"/>
+            <arg name="world_name" value="$(arg world_file)"/>
+        </include>
+
+        <!-- Publicar estados del robot -->
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+        
+        <!-- Spawn del robot -->
+        <node name="spawn_the_robot" pkg="gazebo_ros" type="spawn_model"  output="screen" args="-urdf -param robot_description -model ur5 -x $(arg x) -y $(arg y) -z $(arg z)" />  
+
+        <!-- Controladores -->
+        <rosparam file="$(find ur5_v5)/config/ur5_gripper_controllers.yaml" command="load"/>
+    
+        <node name="controller_spawner" pkg="controller_manager" type="spawner"
+        args="joint_state_controller 
+        eff_joint_traj_controller 
+        gripper_controller
+        --timeout 60" />
+        
+        <!-- Postura inicial -->
+        <node name="set_initial_pose" pkg="ur5_v5" type="ur5_set_initial_pose.py" output="screen"/>
+
+    </launch>
+
+### 28. Crear nuevo Launch File para MoveIt con el Gripper en RViz 🦾📦
+
+Este archivo permitirá levantar **MoveIt** junto con **RViz** y tu configuración personalizada con el **gripper Robotiq 85**.
+
+---
+
+Copiar archivo base
+
+cd ~/catkin_ws/src/ur5_v5/launch
+cp ur5_moveit_with_rviz_2.launch ur5_gripper_moveit_with_rviz_1.launch
+
+Modificar archivo .launch
+Cambiar la carpeta del paquete de configuración de MoveIt
+De:
+    <include file="$(find ur5_moveit_config)/launch/move_group.launch">
+A:
+    <include file="$(find ur_gripper_moveit_config)/launch/move_group.launch">
+
+Código final del archivo ur5_gripper_moveit_with_rviz_1.launch
+
+    <launch>
+    <arg name="sim" default="true" />
+    <arg name="debug" default="false" />
+
+    <!-- Remapea trajectory controller para Gazebo -->
+    <remap if="$(arg sim)" from="/scaled_pos_joint_traj_controller/follow_joint_trajectory" to="/eff_joint_traj_controller/follow_joint_trajectory"/>
+
+    <!-- Lanza MoveIt con la configuración hecha y ubicada en ur_gripper_moveit_config -->
+    <include file="$(find ur_gripper_moveit_config)/launch/move_group.launch">
+        <arg name="debug" value="$(arg debug)" />
+    </include>
+
+    <!-- Lanza RViz con la configuración visual guardada -->
+    <node name="rviz" pkg="rviz" type="rviz" output="screen"
+            args="-d $(find ur5_v5)/config/config.rviz" />
+
+    <!--______________________________________________________________________-->
+    <!-- Nodo RPY en radianes -->
+    <node name="rpy_marker_rad" pkg="ur5_v5" type="rpy_marker_rad.py" output="screen">
+        <param name="reference_frame" value="base_link"/>
+        <param name="target_frame" value="tool0"/>
+    </node>
+
+    <!-- Nodo RPY en grados -->
+    <node name="rpy_marker_deg" pkg="ur5_v5" type="rpy_marker_deg.py" output="screen">
+        <param name="reference_frame" value="base_link"/>
+        <param name="target_frame" value="tool0"/>
+    </node>
+
+    <!-- Nodo joint_state_marker_rad -->
+    <node name="joint_state_marker_rad" pkg="ur5_v5" type="joint_state_marker_rad.py" output="screen" />
+
+    <!-- Nodo joint_state_marker_deg -->
+    <node name="joint_state_marker_deg" pkg="ur5_v5" type="joint_state_marker_deg.py" output="screen" />
+
+    </launch>
+
+### 29.  Ajustar los *Group States* de la garra en SRDF (abrir/cerrar)
+
+Vamos a simplificar los estados `open` y `close` de la garra eliminando los *joints* que no se usan, y dejar solo el que controla directamente el movimiento útil: `robotiq_85_left_knuckle_joint`.
+
+---
+
+Archivo a editar
+
+/home/gazebo-ros/catkin_ws/src/ur_gripper_moveit_config/config/ur5_with_gripper.srdf
+
+Reemplazar el bloque actual:
+
+    <group_state name="open" group="gripper">
+        <joint name="robotiq_85_left_finger_joint" value="0"/>
+        <joint name="robotiq_85_left_knuckle_joint" value="0"/>
+        <joint name="robotiq_85_right_finger_joint" value="0"/>
+    </group_state>
+    <group_state name="close" group="gripper">
+        <joint name="robotiq_85_left_finger_joint" value="0"/>
+        <joint name="robotiq_85_left_knuckle_joint" value="0.803"/>
+        <joint name="robotiq_85_right_finger_joint" value="0"/>
+    </group_state>
+
+Reemplazar por:
+
+    <group_state name="open" group="gripper">
+        <joint name="robotiq_85_left_knuckle_joint" value="0"/>
+    </group_state>
+    <group_state name="close" group="gripper">
+        <joint name="robotiq_85_left_knuckle_joint" value="0.803"/>
+    </group_state>
+
+#### 30. Cambiar la rotación inicial del *gripper* en `eef.xacro`
+
+Para ajustar la orientación con la que el *gripper* se monta inicialmente al UR5, es necesario modificar los ángulos **RPY** (roll, pitch, yaw) directamente en el archivo `eef.xacro`.
+
+---
+
+Archivo a editar
+
+~/catkin_ws/src/ur5_v5/urdf/eef.xacro
+
+Busca la línea que se encarga del posicionamiento y orientación inicial del gripper:
+
+    <origin xyz="0 0 0" rpy="0 -1.57 1.57" /> <!-- Posición inicial del gripper -->
+
+Solo modifica los valores de rpy (en radianes) para rotar el gripper como desees.
+
+Por ejemplo:
+
+Rotación roll 90° → 1.57 0 0
+
+Rotación pitch -90° → 0 -1.57 0
+
+Combina según tu necesidad con: <origin xyz="..." rpy="..." />
+
+### 31. 🚀 Crear archivo `launch` para lanzar el UR5 con *gripper* y los objetos automáticamente
+
+---
+
+
+Unificar el lanzamiento del robot con gripper y los objetos de simulación en un solo archivo `launch`.
+
+---
+
+Ruta del nuevo archivo
+
+~/catkin_ws/src/ur5_v5/launch/ur5_gripper_gazebo_add_objects_1.launch
+
+Contenido del archivo:
+
+    <?xml version="1.0"?>
+    <launch>
+        <!-- Incluye el launch principal del robot con gripper -->
+        <include file="$(find ur5_v5)/launch/ur5_gripper_gazebo_1.launch" />
+
+        <!-- Ejecuta el script delay que luego lanza spawn_objects.launch -->
+        <node name="delayed_spawn" pkg="ur5_v5" type="delayed_spawn.py" output="screen" />
+    </launch>
+
+Lanzar Gazebo con el UR5 + gripper + objetos:
+
+    roslaunch ur5_v5 ur5_gripper_gazebo_add_objects_1.launch
+
+Lanzar RViz + MoveIt:
+
+    roslaunch ur5_v5 ur5_gripper_moveit_with_rviz_1.launch
+
+A partir de ahora, usaremos el archivo ur5_gripper_gazebo_add_objects_1.launch como el launcher principal para levantar el robot y los objetos en Gazebo.
+
+Después, abrimos otra terminal y ejecutamos ur5_gripper_moveit_with_rviz_1.launch para usar MoveIt con RViz.
+
+### 32. ▶️ Ejecución del Script de Pick & Place
+
+En terminal:
+
+    roslaunch ur5_moveit_config demo.launch
+
+Luego, en otra terminal:
+
+    rosrun <tu_paquete> ur5_pick_and_place.py
 
 
 ## 🤖 VI-Conexión con el Robot Físico UR5
