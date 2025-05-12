@@ -3,6 +3,9 @@
 Este tutorial te guía paso a paso para simular y ejecutar una tarea de pick and place utilizando el brazo robótico UR5 y el gripper Robotiq 2F-85, integrando herramientas como Gazebo, MoveIt, RViz y Python en ROS Noetic sobre Ubuntu 20.04. Comenzarás configurando un entorno de simulación funcional y terminarás controlando el robot físico desde una computadora remota, aplicando los mismos scripts desarrollados en el entorno virtual. Ideal para quienes buscan unir teoría, simulación y práctica real en robótica colaborativa.
 
 ---
+## Content List
+
+---
 
 ## 📋 I-Requisitos Previos
 
@@ -104,7 +107,7 @@ Si no aparece ningún resultado, sigue los pasos a continuación para instalarlo
 🔧 Opción 2 – Instalarlo dentro de tu workspace de ROS (si no tienes permisos sudo). 
 Esto no lo podremos hacer en este instante. Una vez que creemos nuestro workspace de ROS ya podríamos regresar a realizar este paso y desde la terminal ejecutar los siguientes comandos:
 
-        cd ~/catkin_ws/src
+        cd ~/catkin_ws_1/src
         git clone https://github.com/roboticsgroup/roboticsgroup_gazebo_plugins.git
         cd ..
         catkin_make
@@ -119,16 +122,16 @@ Configurar Gazebo para encontrar el plugin:
     source ~/.bashrc
 
 ## 🛠️ IV-Configuración del entorno 
-### 1. Creación y configuración del catkin_ws
+### 1. Creación y configuración del catkin_ws_1
 Si aún no tienes un workspace de ROS configurado, sigue estos pasos:
 
-    mkdir -p ~/catkin_ws/src
-    cd ~/catkin_ws/
+    mkdir -p ~/catkin_ws_1/src
+    cd ~/catkin_ws_1/
     catkin_make
 
 Agrega el workspace a tu entorno de shell para que ROS lo reconozca:
 
-    echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
+    echo "source ~/catkin_ws_1/devel/setup.bash" >> ~/.bashrc
     source ~/.bashrc
 
 ### 2. Clonado de repositorios (UR5, Robotiq, MoveIt config, etc.)
@@ -149,7 +152,7 @@ Dentro de la carpeta src, clona los siguientes paquetes necesarios para el UR5 y
 
 Este plugin es necesario para simular correctamente el movimiento sincronizado de los dedos del gripper. Solo es necesario si no lo instalaste globalmente:
 
-    cd ~/catkin_ws/src
+    cd ~/catkin_ws_1/src
     git clone https://github.com/roboticsgroup/roboticsgroup_gazebo_plugins.git
     cd ..
     catkin_make
@@ -161,7 +164,7 @@ Si lo instalaste globalmente, puedes verificarlo con:
 #### C) Agregar el gripper Robotiq 2F-85
 En este tutorial usaremos una versión simplificada del modelo del gripper:
 
-    cd ~/catkin_ws/src
+    cd ~/catkin_ws_1/src
     git clone https://github.com/LearnRoboticsWROS/robotiq_description.git
     mv robotiq_description robotiq_gripper
     cd ..
@@ -173,7 +176,7 @@ Para simulación basta con la carpeta: robotiq_85_gripper-master/robotiq_85_desc
 ### 3. Compilación con catkin_make
 Una vez descargados los paquetes:
 
-    cd ~/catkin_ws
+    cd ~/catkin_ws_1
     rosdep install --from-paths src --ignore-src -r -y
     catkin_make
 
@@ -182,23 +185,23 @@ Si todo se compila sin errores, ¡ya tienes tu entorno base configurado!
 ### 4. Sourcing del workspace
 Para no tener que hacer esto cada vez:
 
-    source ~/catkin_ws/devel/setup.bash
+    source ~/catkin_ws_1/devel/setup.bash
 
 Automatízalo añadiéndolo a tu .bashrc con la ayuda de este comando:
 
-    echo "source ~catkin_ws/devel/setup.bash" >> ~/.bashrc
+    echo "source ~catkin_ws_1/devel/setup.bash" >> ~/.bashrc
 
 Si ya hiciste esto último, en automatico hará el sourcing en cada nueva terminal.
 
 ### 5. Crear tu propio paquete (package)
 Crea un paquete donde guardarás tus archivos de control, simulación y scripts ejecutando las siguientes instrucciones en la terminal:
 
-    cd ~/catkin_ws/src
+    cd ~/catkin_ws_1/src
     catkin_create_pkg ur5_v1 controller_manager joint_state_controller robot_state_publisher roscpp rospy std_msgs urdf
     cd ..
     catkin_make
 
-Esto te generará la estructura básica en catkin_ws/src/ur5_V1, donde colocarás tus archivos .launch, URDFs y scripts Python.
+Esto te generará la estructura básica en catkin_ws_1/src/ur5_V1, donde colocarás tus archivos .launch, URDFs y scripts Python.
 
 Nota: Recordemos que para crear un package, se debe de seguir la siguiente estructura:
 
@@ -239,14 +242,14 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 ## 🧪 V-Simulación del Pick and Place
 
 ### 1) Visualizar el Robot en RViz con Archivo XACRO
-- Crear la carpeta urdf (Unified Robot Description Format) dentro de la ruta ~/catkin_ws/src/ur5_v1
+- Crear la carpeta urdf (Unified Robot Description Format) dentro de la ruta ~/catkin_ws_1/src/ur5_v1
 
 - Ejecutar en una terminal: 
 
     roslaunch moveit_setup_assistant setup_assistant.launch
 
     - Dar click en -> Edit Existing MoveIt Configuration Package
-    - Poner esta ruta: /home/gazebo-ros/catkin_ws/src/universal_robot/ur5_moveit_config
+    - Poner esta ruta: /home/gazebo-ros/catkin_ws_1/src/universal_robot/ur5_moveit_config
     - Darle click a Load Files
     - Ir a la parte de "Simulation" y copiar todo el texto
     - Cerrar Movit Assistant
@@ -273,14 +276,58 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 
 
 ### 2) Crear Launch para Mostrar el Robot en RViz
+- Crear la carpeta launch dentro de catkin_ws_1/src/ur5_v1. 
+- Crear dentro, el archivo "rviz_ur5.launch"
+- En ese archivo se coloca lo siguiente, revisar que donde dice find si aparezca el nombre que tu tienes de tu carpeta y que el archivo xacro igual se llame igual que el que tu tienes: 
 
+    <?xml version="1.0"?>
+    <launch>
+
+        <!-- Associate to the robot description parameter, the urdf file that model the robot-->
+        <param name="robot_description" command = "$(find xacro)/xacro --inorder $(find ur5_v1)/urdf/ur5_1.xacro" />
+
+        <!-- Read the joint value-->
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+        
+        <!-- Visualization in Rviz-->
+        <node name="rviz" pkg="rviz" type="rviz" /> 
+
+        <!-- Visualization of the use_gui for playing with joint-->
+        <arg name="use_gui" default="true" />
+        <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"  output="screen" unless="$(arg use_gui)" />
+        <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"  output="screen" if="$(arg use_gui)"/>    
+        
+    </launch>
 
 ### 3) Configurar Visualización en RViz y Guardar Configuración
+- Para ejecutar RViz, ejecutar en terminal esto:
 
+    cd ~/catkin_ws_1    
+	roslaunch ur5_v1 rviz_ur5.launch
 
+- No aparecerá el robot, pero se arregla ajustando ciertas configuraciones:
+    - Global OPtions → FixedFrame →base_link
+    - Grid → Plane Cell Count → 20
+    - Grid → Cell Size → 0.1
+    - En Displays → Add → :
+        - RobotModel
+        - TF
+        - MotionPlanning
+    - Acomodar la visualización que nosotros querramos
+- Crear la carpeta 'config' en ~/catkin_ws_1/src/ur5_v1. 
+- Guardar la configuracion en esa carpeta con el nombre de "config.rviz"
 
 ### 4) Configurar Controladores del Robot
++ Abrir la carpeta ~/catkin_ws_1/src/ur5_v1/config
++ Crear el archivo "ur5_controllers.yaml"
+    - Checar cual es el tipo de "HardwareInterface" en el archivo.xacro. 
+    - En nuestro caso será "EffortController", pero esto quiere decir que necesitaríamos tunnear el PID. Pero, no lo haremos porque UR ya lo hizo. 
++ Buscar el archivo: ~/catkin_ws_1/src/universal_robots/ur_gazebo/config/ur5_controller.yaml 
++ Copiar contenido y pegarlo en el que creamos nosotros.
 
+[] Nota 1: JointTrajectoryController es porque vamos a usar el plugin de RVIZ y ese usa JointTrajectoryController
+{} Nota 2: Usa un publish_rate alto (125 Hz), lo que puede mejorar la suavidad en simulación. Se puede usar un publish_rate más bajo (50 Hz), suficiente para pruebas, pero menos suave. Esto se ve en esta linea:
+    publish_rate: &loop_hz 125 
 
 ### 5) Crear Modelos SDF de Objetos
 
