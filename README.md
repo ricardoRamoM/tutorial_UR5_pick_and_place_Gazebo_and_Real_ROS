@@ -856,7 +856,7 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
                 'dropbox2': (-0.7, 0.65, 0.985),
                 'cubo1': (0.6, 0.8, 1.01),
                 'cubo2': (0.9, 0.4, 1.01),
-                'cubo3': (0.75, 0.35, 1.01),
+                'cubo3': (0.7, 0.1, 1.01),
             }
 
             for name, path in models.items():
@@ -995,7 +995,7 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
                     'dropbox2': (-0.7, 0.65, 0.985),
                     'cubo1': (0.6, 0.8, 1.01),
                     'cubo2': (0.9, 0.4, 1.01),
-                    'cubo3': (0.75, -0.05, 1.01),
+                    'cubo3': (0.7, 0.1, 1.01),
                 }
 
                 for name, path in models.items():

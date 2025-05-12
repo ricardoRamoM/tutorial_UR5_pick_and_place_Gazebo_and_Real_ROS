@@ -51,8 +51,8 @@ if __name__ == "__main__":
     pick_pose = create_pose(0.7, 0.1, 0.2, 0, 3.14, 0)      # ajusta coordenadas
 
     # 2️⃣ Aproach sobre posición de depósito
-#    approach_place = create_pose(-0.25, 0.65, 0.7, 0, 3.14, 0)  # ajusta coordenadas
- #   place_pose = create_pose(-0.25, 0.65, 0.6, 0, 3.14, 0)      # ajusta coordenadas
+    # approach_place = create_pose(-0.25, 0.65, 0.7, 0, 3.14, 0)  # ajusta coordenadas
+    # place_pose = create_pose(-0.25, 0.65, 0.6, 0, 3.14, 0)      # ajusta coordenadas
 
     approach_place = create_pose(-0.5, 0.5, 0.5, 0, 3.14, 0)  # ajusta coordenadas
     place_pose = create_pose(-0.5, 0.5, 0.4, 0, 3.14, 0)      # ajusta coordenadas
@@ -72,21 +72,6 @@ if __name__ == "__main__":
 
     # Subir a approach_pick
     go_to_pose(approach_pick)
-
-    # Mover al approach_place
-    go_to_pose(approach_place)
-
-    # Bajar al place_pose
-    go_to_pose(place_pose)
-
-    # Abrir gripper
-    open_gripper()
-
-    # Subir a approach_place
-    go_to_pose(approach_place)
-
-    arm_group.set_named_target("up")  # Usamos la posición "up" definida
-    arm_group.go(wait=True)
 
     rospy.loginfo("Pick and Place completado ")
 
