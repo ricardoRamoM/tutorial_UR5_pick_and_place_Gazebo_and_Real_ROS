@@ -1,0 +1,362 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="default">
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/09ubberboy90/models/box 5cm</uri>
+      <name>cube1</name>
+      <pose>0.6 0.8  1.01 0 0 0</pose> <!--Pose enmedio del cubo -->
+    </include>
+
+     <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/09ubberboy90/models/box 5cm</uri>
+      <name>cube2</name>
+      <pose>0.75 0.55 1.01 0 0 0</pose> <!--Pose enmedio del cubo -->
+    </include>
+
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/09ubberboy90/models/box 5cm</uri>
+      <name>cube3</name>
+      <pose>0.9 0.4 1.01 0 0 0</pose> <!--Pose enmedio del cubo -->
+    </include>
+
+     <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/09ubberboy90/models/box 5cm</uri>
+      <name>cube4</name>
+      <pose>0.65 0.35  1.01 0 0 0</pose> <!--Pose enmedio del cubo -->
+    </include>
+
+    <!--************************************* mesa ******************************-->
+    <!-- Mesa con patas corregidas -->
+    <model name='mesa'>
+      <static>true</static>
+      <pose>0 0.3 0 0 0 0</pose>
+
+      <link name='tablero'>
+        <pose>0 0 0.98 0 0 0</pose>
+        <visual name='visual'>
+          <geometry>
+            <box>
+              <size>2.0 1.21 0.01</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.6 0.4 0.2 1</ambient>
+            <diffuse>0.6 0.4 0.2 1</diffuse>
+          </material>
+        </visual>
+        <collision name='collision'>
+          <geometry>
+            <box>
+              <size>2.0 1.21 0.01</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+
+      <!-- Patas -->
+      <link name='pata1'>
+        <pose>-0.95 -0.55 0.49 0 0 0</pose>
+        <visual name='visual'>
+          <geometry>
+            <box>
+              <size>0.07 0.03 0.98</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.3 0.3 0.3 1</ambient>
+          </material>
+        </visual>
+        <collision name='collision'>
+          <geometry>
+            <box>
+              <size>0.07 0.03 0.98</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+
+      <link name='pata2'>
+        <pose>0.95 -0.55 0.49 0 0 0</pose>
+        <visual name='visual'>
+          <geometry>
+            <box>
+              <size>0.07 0.03 0.98</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.3 0.3 0.3 1</ambient>
+          </material>
+        </visual>
+        <collision name='collision'>
+          <geometry>
+            <box>
+              <size>0.07 0.03 0.98</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+
+      <link name='pata3'>
+        <pose>-0.95 0.55 0.49 0 0 0</pose>
+        <visual name='visual'>
+          <geometry>
+            <box>
+              <size>0.07 0.03 0.98</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.3 0.3 0.3 1</ambient>
+          </material>
+        </visual>
+        <collision name='collision'>
+          <geometry>
+            <box>
+              <size>0.07 0.03 0.98</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+
+      <link name='pata4'>
+        <pose>0.95 0.55 0.49 0 0 0</pose>
+        <visual name='visual'>
+          <geometry>
+            <box>
+              <size>0.07 0.03 0.98</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.3 0.3 0.3 1</ambient>
+          </material>
+        </visual>
+        <collision name='collision'>
+          <geometry>
+            <box>
+              <size>0.07 0.03 0.98</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!--************************************* dropbox ******************************-->
+    <model name='dropbox'>
+      <static>true</static>
+      <link name='link'>
+        <!-- Base -->
+        <pose>-0.5 0.3 0.99 0 0 0</pose>
+        <visual name='base'>
+          <geometry>
+            <box>
+              <size>0.3 0.2 0.01</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0 0.3 0.6 1</ambient>
+          </material>
+        </visual>
+        <collision name='base_collision'>
+          <geometry>
+            <box>
+              <size>0.3 0.2 0.01</size>
+            </box>
+          </geometry>
+        </collision>
+        <!-- Paredes -->
+        <visual name='wall1'>
+          <pose>0 0.1 0.075 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.3 0.005 0.15</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0 0.3 0.6 1</ambient>
+          </material>
+        </visual>
+        <collision name='wall1_collision'>
+          <pose>0 0.1 0.075 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.3 0.005 0.15</size>
+            </box>
+          </geometry>
+        </collision>
+
+        <visual name='wall2'>
+          <pose>0 -0.1 0.075 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.3 0.005 0.15</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0 0.3 0.6 1</ambient>
+          </material>
+        </visual>
+        <collision name='wall2_collision'>
+          <pose>0 -0.1 0.075 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.3 0.005 0.15</size>
+            </box>
+          </geometry>
+        </collision>
+
+        <visual name='wall3'>
+          <pose>0.15 0 0.075 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.005 0.2 0.15</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0 0.3 0.6 1</ambient>
+          </material>
+        </visual>
+        <collision name='wall3_collision'>
+          <pose>0.15 0 0.075 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.005 0.2 0.15</size>
+            </box>
+          </geometry>
+        </collision>
+
+        <visual name='wall4'>
+          <pose>-0.15 0 0.075 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.005 0.2 0.15</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0 0.3 0.6 1</ambient>
+          </material>
+        </visual>
+        <collision name='wall4_collision'>
+          <pose>-0.15 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.005 0.2 0.15</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!--************************************* dropbox 2 ******************************-->
+    <model name='dropbox2'>
+    <static>true</static>
+    <link name='link'>
+      <!-- Base -->
+      <pose>-0.5 0.65 0.99 0 0 0</pose>
+      <visual name='base'>
+        <geometry>
+          <box>
+            <size>0.3 0.2 0.01</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.8 0 0 1</ambient>
+        </material>
+      </visual>
+      <collision name='base_collision'>
+        <geometry>
+          <box>
+            <size>0.3 0.2 0.01</size>
+          </box>
+        </geometry>
+      </collision>
+      <!-- Paredes -->
+      <visual name='wall1'>
+        <pose>0 0.1 0.075 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.3 0.005 0.15</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.8 0 0 1</ambient>
+        </material>
+      </visual>
+      <collision name='wall1_collision'>
+        <pose>0 0.1 0.075 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.3 0.005 0.15</size>
+          </box>
+        </geometry>
+      </collision>
+
+      <visual name='wall2'>
+        <pose>0 -0.1 0.075 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.3 0.005 0.15</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.8 0 0 1</ambient>
+        </material>
+      </visual>
+      <collision name='wall2_collision'>
+        <pose>0 -0.1 0.075 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.3 0.005 0.15</size>
+          </box>
+        </geometry>
+      </collision>
+
+      <visual name='wall3'>
+        <pose>0.15 0 0.075 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.005 0.2 0.15</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.8 0 0 1</ambient>
+        </material>
+      </visual>
+      <collision name='wall3_collision'>
+        <pose>0.15 0 0.075 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.005 0.2 0.15</size>
+          </box>
+        </geometry>
+      </collision>
+
+      <visual name='wall4'>
+        <pose>-0.15 0 0.075 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.005 0.2 0.15</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.8 0 0 1</ambient>
+        </material>
+      </visual>
+      <collision name='wall4_collision'>
+        <pose>-0.15 0 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.005 0.2 0.15</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+  </model>
+
+  </world>
+</sdf>

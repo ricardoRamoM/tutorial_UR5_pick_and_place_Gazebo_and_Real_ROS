@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="cube3">
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/09ubberboy90/models/box 5cm</uri>
+      <name>cube1</name>
+      <pose>0 0 0 0 0 0</pose><!--Pose esta enmedio del cubo -->
+    </include>
+  </model>
+</sdf>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Incluye el launch principal del robot -->
+    <include file="$(find ur5_v5)/launch/ur5_gripper_gazebo_1.launch" />
+
+    <!-- Ejecuta el script delay que luego lanza spawn_objects.launch -->
+    <node name="delayed_spawn" pkg="ur5_v5" type="delayed_spawn.py" output="screen" />
+
+</launch>

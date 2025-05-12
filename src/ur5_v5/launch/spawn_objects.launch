@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Lanzar el script spawn_objects.py -->
+    <node name="spawn_objects" pkg="ur5_v5" type="spawn_objects.py" output="screen" />
+</launch>

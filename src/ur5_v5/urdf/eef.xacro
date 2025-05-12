@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<!--End Efector xacro file-->
+<robot name="robotiq_85_gripper" xmlns:xacro="http://ros.org/wiki/xacro">
+
+    
+    <!-- Manda a llamar el xacro directo de robotiq_gripper package-->
+    <xacro:include filename="$(find robotiq_gripper)/urdf/robotiq_85_gripper.urdf.xacro" />
+
+    <!--This is where is gonna be the base link of the gripper in 
+        relation to the tool0(which is the endefector of the robot)-->
+    <xacro:robotiq_85_gripper prefix="" parent="tool0" >
+        <origin xyz = "0 0 0" rpy = "0 -1.57 1.57" /> <!--Posicion inicial del gripper-->
+    </xacro:robotiq_85_gripper>
+</robot>

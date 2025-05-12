@@ -1,0 +1,16 @@
+<launch>
+  <arg name="sim" default="true" />
+  <arg name="debug" default="false" />
+
+  <!-- Remapea trajectory controller para Gazebo -->
+  <remap if="$(arg sim)" from="/scaled_pos_joint_traj_controller/follow_joint_trajectory" to="/eff_joint_traj_controller/follow_joint_trajectory"/>
+
+  <!-- Lanza MoveIt  con la config de Universal Robots-->
+  <include file="$(find ur5_moveit_config)/launch/move_group.launch">
+    <arg name="debug" value="$(arg debug)" />
+  </include>
+
+  <!-- Lanza RViz con la configuración de RVIZ guardada en config -->
+  <node name="rviz" pkg="rviz" type="rviz" output="screen"
+        args="-d $(find ur5_v5)/config/config.rviz" />
+</launch>

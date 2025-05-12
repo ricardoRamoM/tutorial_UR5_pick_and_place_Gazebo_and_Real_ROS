@@ -1,0 +1,8 @@
+prefix=/home/gazebo-ros/catkin_ws_7/devel
+
+Name: ur5_v5
+Description: Description of ur5_v5
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

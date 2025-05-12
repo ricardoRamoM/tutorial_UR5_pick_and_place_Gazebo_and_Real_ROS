@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- Cargar el modelo UR5 -->
+    <param name="robot_description" command="$(find xacro)/xacro '$(find ur5_v5)/urdf/ur5_5.xacro'" /> 
+   
+    <!--Spawn Robot in Gazebo-->
+    <!-- Set the position in empty world of the base link-->
+    <arg name="x" default="0" />
+    <arg name="y" default="0" />
+    <arg name="z" default="1.01" />
+
+    <!-- put world file as argument-->
+    <arg name="world_file" default = "$(find ur5_v5)/worlds/my_custom_world.world" />
+
+    <!-- Lanzar Gazebo con tu mundo -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="paused" value="false"/>
+        <arg name="gui" value="true"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="world_name" value="$(arg world_file)"/>
+    </include>
+
+    <!-- Publicar estados del robot -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+    
+    <!-- Spawn the robot using the package gazebo_ros-->
+    <node name="spawn_the_robot" pkg="gazebo_ros" type="spawn_model"  output="screen" args="-urdf -param robot_description -model ur5 -x $(arg x) -y $(arg y) -z $(arg z)" />  
+
+    <!-- Controladores -->
+    <!-- Cargar Controladores -->
+    <rosparam file="$(find ur5_v5)/config/ur5_controllers.yaml" command="load"/>
+  
+    <!-- Cargar the node Controller manager -->
+    <node name="controller_spawner" pkg="controller_manager" type="spawner"
+      args="joint_state_controller 
+      eff_joint_traj_controller 
+      --timeout 60 " />
+
+</launch>

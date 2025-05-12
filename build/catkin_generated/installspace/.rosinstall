@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/gazebo-ros/catkin_ws_7/install/setup.sh

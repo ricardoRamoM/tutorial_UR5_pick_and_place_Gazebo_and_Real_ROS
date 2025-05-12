@@ -1,0 +1,115 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+    <model name='dropbox'>
+      <static>true</static>
+      <link name='link'>
+        <pose>0 0 0 0 0 0</pose>
+
+        <!-- Base -->
+        <visual name='base'>
+          <pose>0 0 0.005 0 0 0</pose> <!-- altura base / 2 -->
+          <geometry>
+            <box>
+              <size>0.3 0.2 0.01</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0 0.3 0.6 1</ambient>
+          </material>
+        </visual>
+        <collision name='base_collision'>
+          <pose>0 0 0.005 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.3 0.2 0.01</size>
+            </box>
+          </geometry>
+        </collision>
+
+        <!-- Pared frontal -->
+        <visual name='wall1'>
+          <pose>0 0.1 0.08 0 0 0</pose> <!-- base altura: 0.005 + pared mitad altura: 0.075 -->
+          <geometry>
+            <box>
+              <size>0.3 0.005 0.15</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0 0.3 0.6 1</ambient>
+          </material>
+        </visual>
+        <collision name='wall1_collision'>
+          <pose>0 0.1 0.08 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.3 0.005 0.15</size>
+            </box>
+          </geometry>
+        </collision>
+
+        <!-- Pared trasera -->
+        <visual name='wall2'>
+          <pose>0 -0.1 0.08 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.3 0.005 0.15</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0 0.3 0.6 1</ambient>
+          </material>
+        </visual>
+        <collision name='wall2_collision'>
+          <pose>0 -0.1 0.08 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.3 0.005 0.15</size>
+            </box>
+          </geometry>
+        </collision>
+
+        <!-- Pared izquierda -->
+        <visual name='wall3'>
+          <pose>0.15 0 0.08 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.005 0.2 0.15</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0 0.3 0.6 1</ambient>
+          </material>
+        </visual>
+        <collision name='wall3_collision'>
+          <pose>0.15 0 0.08 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.005 0.2 0.15</size>
+            </box>
+          </geometry>
+        </collision>
+
+        <!-- Pared derecha -->
+        <visual name='wall4'>
+          <pose>-0.15 0 0.08 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.005 0.2 0.15</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0 0.3 0.6 1</ambient>
+          </material>
+        </visual>
+        <collision name='wall4_collision'>
+          <pose>-0.15 0 0.08 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.005 0.2 0.15</size>
+            </box>
+          </geometry>
+        </collision>
+
+      </link>
+    </model>
+</sdf>
