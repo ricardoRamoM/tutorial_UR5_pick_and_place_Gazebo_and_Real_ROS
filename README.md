@@ -391,298 +391,298 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 
 - [ ] En el archivo "cube1.sdf", pegar esto:
 
-    <?xml version="1.0" ?>
-    <sdf version="1.6">
-    <model name="cube1">
-        <pose>0 0 0 0 0 0</pose>
-        <link name="link">
-        <visual name="visual">
-            <geometry>
-            <box>
-                <size>0.05 0.05 0.05</size>
-            </box>
-            </geometry>
-            <material>
-            <ambient>0 0.9 0.9 1</ambient>
-            <diffuse>0.6 0.4 0.2 1</diffuse>
-            </material>
-        </visual>
-        <collision name="collision">
-            <geometry>
-            <box>
-                <size>0.05 0.05 0.05</size>
-            </box>
-            </geometry>
-        </collision>
-        </link>
-    </model>
-    </sdf>
+        <?xml version="1.0" ?>
+        <sdf version="1.6">
+        <model name="cube1">
+            <pose>0 0 0 0 0 0</pose>
+            <link name="link">
+            <visual name="visual">
+                <geometry>
+                <box>
+                    <size>0.05 0.05 0.05</size>
+                </box>
+                </geometry>
+                <material>
+                <ambient>0 0.9 0.9 1</ambient>
+                <diffuse>0.6 0.4 0.2 1</diffuse>
+                </material>
+            </visual>
+            <collision name="collision">
+                <geometry>
+                <box>
+                    <size>0.05 0.05 0.05</size>
+                </box>
+                </geometry>
+            </collision>
+            </link>
+        </model>
+        </sdf>
 
 - [ ] En el archivo "cube2.sdf", pegar esto:
 
-    <?xml version="1.0" ?>
-    <sdf version="1.6">
-    <model name="cube1">
-        <pose>0 0 0 0 0 0</pose>
-        <link name="link">
-        <visual name="visual">
-            <geometry>
-            <box>
-                <size>0.04 0.04 0.04</size>
-            </box>
-            </geometry>
-            <material>
-            <ambient>0.6 0 0.2 1</ambient>
-            <diffuse>0.6 0.4 0.2 1</diffuse>
-            </material>
-        </visual>
-        <collision name="collision">
-            <geometry>
-            <box>
-                <size>0.04 0.04 0.04</size>
-            </box>
-            </geometry>
-        </collision>
-        </link>
-    </model>
-    </sdf>
+        <?xml version="1.0" ?>
+        <sdf version="1.6">
+        <model name="cube1">
+            <pose>0 0 0 0 0 0</pose>
+            <link name="link">
+            <visual name="visual">
+                <geometry>
+                <box>
+                    <size>0.04 0.04 0.04</size>
+                </box>
+                </geometry>
+                <material>
+                <ambient>0.6 0 0.2 1</ambient>
+                <diffuse>0.6 0.4 0.2 1</diffuse>
+                </material>
+            </visual>
+            <collision name="collision">
+                <geometry>
+                <box>
+                    <size>0.04 0.04 0.04</size>
+                </box>
+                </geometry>
+            </collision>
+            </link>
+        </model>
+        </sdf>
 
 - [ ] En el archivo "cube3.sdf", pegar esto:
 
-    <?xml version="1.0" ?>
-    <sdf version="1.6">
-    <model name="cube3">
-        <include>
-        <uri>https://fuel.ignitionrobotics.org/1.0/09ubberboy90/models/box 5cm</uri>
-        <name>cube1</name>
-        <pose>0 0 0 0 0 0</pose><!--Pose esta enmedio del cubo -->
-        </include>
-    </model>
-    </sdf>
+        <?xml version="1.0" ?>
+        <sdf version="1.6">
+        <model name="cube3">
+            <include>
+            <uri>https://fuel.ignitionrobotics.org/1.0/09ubberboy90/models/box 5cm</uri>
+            <name>cube1</name>
+            <pose>0 0 0 0 0 0</pose><!--Pose esta enmedio del cubo -->
+            </include>
+        </model>
+        </sdf>
 	
 - [ ] En el archivo "mesa.sdf", pegar esto:
 
-    <?xml version="1.0" ?>
-    <sdf version="1.6">
-    <model name="mesa">
-        <static>true</static>
-        <pose>0 0.3 0 0 0 0</pose>
-        <link name="tablero">
-        <pose>0 0 0.98 0 0 0</pose>
-        <visual name="visual">
-            <geometry>
-            <box>
-                <size>2.0 1.21 0.01</size>
-            </box>
-            </geometry>
-            <material>
-            <ambient>0.6 0.4 0.2 1</ambient>
-            <diffuse>0.6 0.4 0.2 1</diffuse>
-            </material>
-        </visual>
-        <collision name="collision">
-            <geometry>
-            <box>
-                <size>2.0 1.21 0.01</size>
-            </box>
-            </geometry>
-        </collision>
-        </link>
-        <!-- Pata 1 -->
-        <link name="pata1">
-        <pose>-0.95 -0.55 0.49 0 0 0</pose>
-        <visual name="visual">
-            <geometry>
-            <box>
-                <size>0.07 0.03 0.98</size>
-            </box>
-            </geometry>
-            <material>
-            <ambient>0.3 0.3 0.3 1</ambient>
-            </material>
-        </visual>
-        <collision name="collision">
-            <geometry>
-            <box>
-                <size>0.07 0.03 0.98</size>
-            </box>
-            </geometry>
-        </collision>
-        </link>
-        <link name='pata2'>
-        <pose>0.95 -0.55 0.49 0 0 0</pose>
-        <visual name='visual'>
-            <geometry>
-            <box>
-                <size>0.07 0.03 0.98</size>
-            </box>
-            </geometry>
-            <material>
-            <ambient>0.3 0.3 0.3 1</ambient>
-            </material>
-        </visual>
-        <collision name='collision'>
-            <geometry>
-            <box>
-                <size>0.07 0.03 0.98</size>
-            </box>
-            </geometry>
-        </collision>
-        </link>
-        <link name='pata3'>
-        <pose>-0.95 0.55 0.49 0 0 0</pose>
-        <visual name='visual'>
-            <geometry>
-            <box>
-                <size>0.07 0.03 0.98</size>
-            </box>
-            </geometry>
-            <material>
-            <ambient>0.3 0.3 0.3 1</ambient>
-            </material>
-        </visual>
-        <collision name='collision'>
-            <geometry>
-            <box>
-                <size>0.07 0.03 0.98</size>
-            </box>
-            </geometry>
-        </collision>
-        </link>
-        <link name='pata4'>
-        <pose>0.95 0.55 0.49 0 0 0</pose>
-        <visual name='visual'>
-            <geometry>
-            <box>
-                <size>0.07 0.03 0.98</size>
-            </box>
-            </geometry>
-            <material>
-            <ambient>0.3 0.3 0.3 1</ambient>
-            </material>
-        </visual>
-        <collision name='collision'>
-            <geometry>
-            <box>
-                <size>0.07 0.03 0.98</size>
-            </box>
-            </geometry>
-        </collision>
-        </link>
-    </model>
-    </sdf>
+        <?xml version="1.0" ?>
+        <sdf version="1.6">
+        <model name="mesa">
+            <static>true</static>
+            <pose>0 0.3 0 0 0 0</pose>
+            <link name="tablero">
+            <pose>0 0 0.98 0 0 0</pose>
+            <visual name="visual">
+                <geometry>
+                <box>
+                    <size>2.0 1.21 0.01</size>
+                </box>
+                </geometry>
+                <material>
+                <ambient>0.6 0.4 0.2 1</ambient>
+                <diffuse>0.6 0.4 0.2 1</diffuse>
+                </material>
+            </visual>
+            <collision name="collision">
+                <geometry>
+                <box>
+                    <size>2.0 1.21 0.01</size>
+                </box>
+                </geometry>
+            </collision>
+            </link>
+            <!-- Pata 1 -->
+            <link name="pata1">
+            <pose>-0.95 -0.55 0.49 0 0 0</pose>
+            <visual name="visual">
+                <geometry>
+                <box>
+                    <size>0.07 0.03 0.98</size>
+                </box>
+                </geometry>
+                <material>
+                <ambient>0.3 0.3 0.3 1</ambient>
+                </material>
+            </visual>
+            <collision name="collision">
+                <geometry>
+                <box>
+                    <size>0.07 0.03 0.98</size>
+                </box>
+                </geometry>
+            </collision>
+            </link>
+            <link name='pata2'>
+            <pose>0.95 -0.55 0.49 0 0 0</pose>
+            <visual name='visual'>
+                <geometry>
+                <box>
+                    <size>0.07 0.03 0.98</size>
+                </box>
+                </geometry>
+                <material>
+                <ambient>0.3 0.3 0.3 1</ambient>
+                </material>
+            </visual>
+            <collision name='collision'>
+                <geometry>
+                <box>
+                    <size>0.07 0.03 0.98</size>
+                </box>
+                </geometry>
+            </collision>
+            </link>
+            <link name='pata3'>
+            <pose>-0.95 0.55 0.49 0 0 0</pose>
+            <visual name='visual'>
+                <geometry>
+                <box>
+                    <size>0.07 0.03 0.98</size>
+                </box>
+                </geometry>
+                <material>
+                <ambient>0.3 0.3 0.3 1</ambient>
+                </material>
+            </visual>
+            <collision name='collision'>
+                <geometry>
+                <box>
+                    <size>0.07 0.03 0.98</size>
+                </box>
+                </geometry>
+            </collision>
+            </link>
+            <link name='pata4'>
+            <pose>0.95 0.55 0.49 0 0 0</pose>
+            <visual name='visual'>
+                <geometry>
+                <box>
+                    <size>0.07 0.03 0.98</size>
+                </box>
+                </geometry>
+                <material>
+                <ambient>0.3 0.3 0.3 1</ambient>
+                </material>
+            </visual>
+            <collision name='collision'>
+                <geometry>
+                <box>
+                    <size>0.07 0.03 0.98</size>
+                </box>
+                </geometry>
+            </collision>
+            </link>
+        </model>
+        </sdf>
 
 - [ ] En el archivo "dropbox.sdf", pegar esto:
 
-    <?xml version="1.0" ?>
-    <sdf version="1.6">
-        <model name='dropbox'>
-        <static>true</static>
-        <link name='link'>
-            <pose>0 0 0 0 0 0</pose>
-            <!-- Base -->
-            <visual name='base'>
-            <pose>0 0 0.005 0 0 0</pose> <!-- altura base / 2 -->
-            <geometry>
-                <box>
-                <size>0.3 0.2 0.01</size>
-                </box>
-            </geometry>
-            <material>
-                <ambient>0 0.3 0.6 1</ambient>
-            </material>
-            </visual>
-            <collision name='base_collision'>
-            <pose>0 0 0.005 0 0 0</pose>
-            <geometry>
-                <box>
-                <size>0.3 0.2 0.01</size>
-                </box>
-            </geometry>
-            </collision>
-            <!-- Pared frontal -->
-            <visual name='wall1'>
-            <pose>0 0.1 0.08 0 0 0</pose> <!-- base altura: 0.005 + pared mitad altura: 0.075 -->
-            <geometry>
-                <box>
-                <size>0.3 0.005 0.15</size>
-                </box>
-            </geometry>
-            <material>
-                <ambient>0 0.3 0.6 1</ambient>
-            </material>
-            </visual>
-            <collision name='wall1_collision'>
-            <pose>0 0.1 0.08 0 0 0</pose>
-            <geometry>
-                <box>
-                <size>0.3 0.005 0.15</size>
-                </box>
-            </geometry>
-            </collision>
-            <!-- Pared trasera -->
-            <visual name='wall2'>
-            <pose>0 -0.1 0.08 0 0 0</pose>
-            <geometry>
-                <box>
-                <size>0.3 0.005 0.15</size>
-                </box>
-            </geometry>
-            <material>
-                <ambient>0 0.3 0.6 1</ambient>
-            </material>
-            </visual>
-            <collision name='wall2_collision'>
-            <pose>0 -0.1 0.08 0 0 0</pose>
-            <geometry>
-                <box>
-                <size>0.3 0.005 0.15</size>
-                </box>
-            </geometry>
-            </collision>
-            <!-- Pared izquierda -->
-            <visual name='wall3'>
-            <pose>0.15 0 0.08 0 0 0</pose>
-            <geometry>
-                <box>
-                <size>0.005 0.2 0.15</size>
-                </box>
-            </geometry>
-            <material>
-                <ambient>0 0.3 0.6 1</ambient>
-            </material>
-            </visual>
-            <collision name='wall3_collision'>
-            <pose>0.15 0 0.08 0 0 0</pose>
-            <geometry>
-                <box>
-                <size>0.005 0.2 0.15</size>
-                </box>
-            </geometry>
-            </collision>
-            <!-- Pared derecha -->
-            <visual name='wall4'>
-            <pose>-0.15 0 0.08 0 0 0</pose>
-            <geometry>
-                <box>
-                <size>0.005 0.2 0.15</size>
-                </box>
-            </geometry>
-            <material>
-                <ambient>0 0.3 0.6 1</ambient>
-            </material>
-            </visual>
-            <collision name='wall4_collision'>
-            <pose>-0.15 0 0.08 0 0 0</pose>
-            <geometry>
-                <box>
-                <size>0.005 0.2 0.15</size>
-                </box>
-            </geometry>
-            </collision>
-        </link>
-        </model>
-    </sdf>
+        <?xml version="1.0" ?>
+        <sdf version="1.6">
+            <model name='dropbox'>
+            <static>true</static>
+            <link name='link'>
+                <pose>0 0 0 0 0 0</pose>
+                <!-- Base -->
+                <visual name='base'>
+                <pose>0 0 0.005 0 0 0</pose> <!-- altura base / 2 -->
+                <geometry>
+                    <box>
+                    <size>0.3 0.2 0.01</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0 0.3 0.6 1</ambient>
+                </material>
+                </visual>
+                <collision name='base_collision'>
+                <pose>0 0 0.005 0 0 0</pose>
+                <geometry>
+                    <box>
+                    <size>0.3 0.2 0.01</size>
+                    </box>
+                </geometry>
+                </collision>
+                <!-- Pared frontal -->
+                <visual name='wall1'>
+                <pose>0 0.1 0.08 0 0 0</pose> <!-- base altura: 0.005 + pared mitad altura: 0.075 -->
+                <geometry>
+                    <box>
+                    <size>0.3 0.005 0.15</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0 0.3 0.6 1</ambient>
+                </material>
+                </visual>
+                <collision name='wall1_collision'>
+                <pose>0 0.1 0.08 0 0 0</pose>
+                <geometry>
+                    <box>
+                    <size>0.3 0.005 0.15</size>
+                    </box>
+                </geometry>
+                </collision>
+                <!-- Pared trasera -->
+                <visual name='wall2'>
+                <pose>0 -0.1 0.08 0 0 0</pose>
+                <geometry>
+                    <box>
+                    <size>0.3 0.005 0.15</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0 0.3 0.6 1</ambient>
+                </material>
+                </visual>
+                <collision name='wall2_collision'>
+                <pose>0 -0.1 0.08 0 0 0</pose>
+                <geometry>
+                    <box>
+                    <size>0.3 0.005 0.15</size>
+                    </box>
+                </geometry>
+                </collision>
+                <!-- Pared izquierda -->
+                <visual name='wall3'>
+                <pose>0.15 0 0.08 0 0 0</pose>
+                <geometry>
+                    <box>
+                    <size>0.005 0.2 0.15</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0 0.3 0.6 1</ambient>
+                </material>
+                </visual>
+                <collision name='wall3_collision'>
+                <pose>0.15 0 0.08 0 0 0</pose>
+                <geometry>
+                    <box>
+                    <size>0.005 0.2 0.15</size>
+                    </box>
+                </geometry>
+                </collision>
+                <!-- Pared derecha -->
+                <visual name='wall4'>
+                <pose>-0.15 0 0.08 0 0 0</pose>
+                <geometry>
+                    <box>
+                    <size>0.005 0.2 0.15</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0 0.3 0.6 1</ambient>
+                </material>
+                </visual>
+                <collision name='wall4_collision'>
+                <pose>-0.15 0 0.08 0 0 0</pose>
+                <geometry>
+                    <box>
+                    <size>0.005 0.2 0.15</size>
+                    </box>
+                </geometry>
+                </collision>
+            </link>
+            </model>
+        </sdf>
 
 - [ ] En el archivo "dropbox2.sdf", pegar esto:
 
