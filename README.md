@@ -245,22 +245,22 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 
     roslaunch moveit_setup_assistant setup_assistant.launch
 
-- Dar click en -> Edit Existing MoveIt Configuration Package
-- Poner esta ruta y darle a Load Files: /home/gazebo-ros/catkin_ws/src/universal_robot/ur5_moveit_config
-- Ir a la parte de "Simulation" y copiar todo el texto
-- Cerrar Movit Assistant
+    - Dar click en -> Edit Existing MoveIt Configuration Package
+    - Poner esta ruta: /home/gazebo-ros/catkin_ws/src/universal_robot/ur5_moveit_config
+    - Darle click a Load Files
+    - Ir a la parte de "Simulation" y copiar todo el texto
+    - Cerrar Movit Assistant
 
 - Crear, dentro de la carpeta "urdf", el archivo ur5_1.xacro y pegar ahi lo copiado
+- Modificar la interfaz de los joints, cambiando en el archivo ur5_1.xacro los "PositionJointInterface" por "EffortJointInterface"
 
-Modificar la interfaz de los joints, cambiando los "PositionJointInterface" por "EffortJointInterface"
-
-Añadir el joint fijo entre world y base_link. Se arregla abajo de la linea 145, o abajo de esto:
+- Añadir el joint fijo entre world y base_link. Se arregla abajo de la linea 145, o abajo de esto:
 
 		<link name="base_link_inertia">
 		...
 		</link>:	
 	
-Se hace pegando lo siguiente en ese lugar: 
+    - Se hace pegando lo siguiente en ese lugar: 
 
     <!-- Fix the cobot to the world -->
     <link name="world"/>
@@ -270,7 +270,6 @@ Se hace pegando lo siguiente en ese lugar:
         <parent link="world"/>
         <child link="base_link"/>   
     </joint>
-
 
 
 ### 2) Crear Launch para Mostrar el Robot en RViz
