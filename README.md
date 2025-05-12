@@ -1031,12 +1031,13 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
                 main()
 
 ### 10) Establecer Pose Inicial del Robot con Python
-- En esta ruta '~/catkin_ws_1/src/ur5_v5/scripts/config', crear nuevo archivo python llamado "ur5_set_initial_pose.py". 
+- En esta ruta '~/catkin_ws_1/src/ur5_v1/scripts/config', crear nuevo archivo python llamado "ur5_set_initial_pose.py". 
 - Darle permisos de ejecucion al archivo, hay 2 opciones:
 	- En Archivos buscar el archivo python, darle en Propiedades -> Permisos -> Permitir ejecutar el archivo como un programa
 	- En terminal: chmod +x 'ur5_set_initial_pose.py'
 - Copiar y pegar el siguiente código.
 
+**************************************
         #!/usr/bin/env python3
 
         import rospy
@@ -1079,12 +1080,14 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
             wait_for_controller()
             send_initial_pose()
 
+**************************************            
+
 - Crear una copia del archivo 'ur5_gazebo_1.launch' y renombrarlo 'ur5_gazebo_2.launch'
 - Añadir a ese launch "ur5_gazebo_2.launch" lo siguiente:
 
 **************************************
     <!-- Establecer postura inicial con script Python -->
-    <node name="set_initial_pose" pkg="ur5_v5" type="ur5_set_initial_pose.py" output="screen"/>            
+    <node name="set_initial_pose" pkg="ur5_v1" type="ur5_set_initial_pose.py" output="screen"/>            
 **************************************
 
 ### 11) Lanzar Simulación y Spawneo de Objetos
