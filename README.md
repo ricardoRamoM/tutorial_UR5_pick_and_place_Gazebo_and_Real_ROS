@@ -239,13 +239,38 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 ## 🧪 Simulación del Pick and Place
 
 ### 1) Visualizar el Robot en RViz con Archivo XACRO
-Crear la carpeta urdf dentro del package ur5_v5
+- Crear la carpeta urdf (Unified Robot Description Format) dentro de la ruta ~/catkin_ws/src/ur5_v1
 
-Crear el archivo ur5_5.xacro
+- Ejecutar en una terminal: 
 
-Modificar la interfaz de los joints
+    roslaunch moveit_setup_assistant setup_assistant.launch
 
-Añadir el joint fijo entre world y base_link
+- Dar click en -> Edit Existing MoveIt Configuration Package
+- Poner esta ruta y darle a Load Files: /home/gazebo-ros/catkin_ws/src/universal_robot/ur5_moveit_config
+- Ir a la parte de "Simulation" y copiar todo el texto
+- Cerrar Movit Assistant
+
+- Crear, dentro de la carpeta "urdf", el archivo ur5_1.xacro y pegar ahi lo copiado
+
+Modificar la interfaz de los joints, cambiando los "PositionJointInterface" por "EffortJointInterface"
+
+Añadir el joint fijo entre world y base_link. Se arregla abajo de la linea 145, o abajo de esto:
+		<link name="base_link_inertia">
+		...
+		</link>:	
+	
+Se hace pegando lo siguiente en ese lugar: 
+
+    <!-- Fix the cobot to the world -->
+    <link name="world"/>
+
+
+    <joint name="fixed" type="fixed">
+        <parent link="world"/>
+        <child link="base_link"/>   
+    </joint>
+
+
 
 ### 2) Crear Launch para Mostrar el Robot en RViz
 
