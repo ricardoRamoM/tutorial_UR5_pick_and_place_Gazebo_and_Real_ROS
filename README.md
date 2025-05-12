@@ -3,7 +3,54 @@
 Este tutorial te guía paso a paso para simular y ejecutar una tarea de pick and place utilizando el brazo robótico UR5 y el gripper Robotiq 2F-85, integrando herramientas como Gazebo, MoveIt, RViz y Python en ROS Noetic sobre Ubuntu 20.04. Comenzarás configurando un entorno de simulación funcional y terminarás controlando el robot físico desde una computadora remota, aplicando los mismos scripts desarrollados en el entorno virtual. Ideal para quienes buscan unir teoría, simulación y práctica real en robótica colaborativa.
 
 ---
-## Content List
+## 📑 Índice
+
+1. [📋 I - Requisitos Previos](#-i--requisitos-previos)
+2. [📖 II - Introducción](#-ii--introducción)
+3. [💾 III - Instalación del Software Necesario](#-iii--instalación-del-software-necesario)
+   - [1. Gazebo](#1-gazebo-simulador-3d-para-ros)
+   - [2. MoveIt](#2-moveit-para-la-planificación-de-trayectorias)
+   - [3. RViz](#3-instalación-de-rviz)
+   - [4. Herramientas adicionales](#4-instalación-de-herramientas-adicionales)
+   - [5. Python y dependencias](#5-python-y-dependencias-ros-para-python)
+   - [6. Plugin Mimic para el Gripper](#6-instalación-del-plugin-mimic-para-gazebo-robotiq-gripper)
+4. [🛠️ IV - Configuración del Entorno](#-iv--configuración-del-entorno)
+   - [1. catkin_ws](#1-creación-y-configuración-del-catkin_ws)
+   - [2. Repositorios necesarios](#2-clonado-de-repositorios-ur5-robotiq-moveit-config-etc)
+   - [3. Compilación con catkin_make](#3-compilación-con-catkin_make)
+   - [4. Sourcing del workspace](#4-sourcing-del-workspace)
+   - [5. Crear tu propio paquete](#5-crear-tu-propio-paquete-package)
+   - [6. Probar simulación básica](#6-probar-simulación-básica-ur5-y-gripper)
+5. [🧪 V - Simulación del Pick and Place](#-v--simulación-del-pick-and-place)
+   - [1. Visualización del robot con XACRO](#1-visualizar-el-robot-en-rviz-con-archivo-xacro)
+   - [2. Crear Launch para RViz](#2-crear-launch-para-mostrar-el-robot-en-rviz)
+   - [3. Configurar visualización](#3-configurar-visualización-en-rviz-y-guardar-configuración)
+   - [4. Configurar controladores](#4-configurar-controladores-del-robot)
+   - [5. Crear modelos SDF](#5-crear-modelos-sdf-de-objetos)
+   - [6. Script para spawnear objetos](#6-crear-script-para-spawnear-objetos)
+   - [7. Crear Launches de Simulación y Planificación](#7-crear-launches-de-simulación-y-planificación)  
+   - [8. Spawnear Objetos Desde Launch](#8-spawnear-objetos-desde-launch)  
+   - [9. Añadir Delay Antes de Spawnear Objetos](#9-añadir-delay-antes-de-spawnear-objetos)  
+   - [10. Establecer Pose Inicial del Robot con Python](#10-establecer-pose-inicial-del-robot-con-python)  
+   - [11. Lanzar Simulación y Spawneo de Objetos](#11-lanzar-simulación-y-spawneo-de-objetos)  
+   - [12. Ver Orientación en RPY en RViz](#12-ver-orientación-en-rpy-en-rviz)  
+   - [13. Ver Articulaciones q1-q6 en RViz](#13-ver-articulaciones-q1-q6-en-rviz)  
+   - [14. Incluir Todos los Scripts en el Launch de MoveIt + RViz](#14-incluir-todos-los-scripts-en-el-launch-de-moveit--rviz)  
+6. [🔌 VI - Conexión con el Robot Físico UR5](#-vii--conexión-con-el-robot-físico-ur5)  
+   - [1. Configuración de red y comunicación con el UR5](#1-configuración-de-red-y-comunicación-con-el-ur5)  
+   - [2. Lanzar el robot real con MoveIt](#2-lanzar-el-robot-real-con-moveit)  
+   - [3. Adaptar y ejecutar el script en el robot físico](#3-adaptar-y-ejecutar-el-script-en-el-robot-físico)  
+
+7. [🧩 VII - Estructura del Código y Explicación del Script](#-viii--estructura-del-código-y-explicación-del-script)  
+   - [1. Desglose del script Python](#1-desglose-del-script-python)  
+   - [2. Comunicación de nodos y control de movimientos](#2-comunicación-de-nodos-y-control-de-movimientos)  
+
+8. [✅ VIII - Conclusión](#-ix--conclusión)  
+9. [🚀 IX - Mejoras Futuras](#-x--mejoras-futuras)  
+10. [⚠️ X - Advertencia](#-xi--advertencia)  
+11. [📚 XI - Recursos Adicionales](#-xii--recursos-adicionales)  
+12. [👥 XII - Autores del Proyecto](#-xiii--autores-del-proyecto)  
+13. [📬 XIII - Contacto](#-xiv--contacto)  
 
 ---
 
@@ -325,8 +372,8 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 + Buscar el archivo: ~/catkin_ws_1/src/universal_robots/ur_gazebo/config/ur5_controller.yaml 
 + Copiar contenido y pegarlo en el que creamos nosotros.
 
-[] Nota 1: JointTrajectoryController es porque vamos a usar el plugin de RVIZ y ese usa JointTrajectoryController
-{} Nota 2: Usa un publish_rate alto (125 Hz), lo que puede mejorar la suavidad en simulación. Se puede usar un publish_rate más bajo (50 Hz), suficiente para pruebas, pero menos suave. Esto se ve en esta linea:
+[ ] Nota 1: JointTrajectoryController es porque vamos a usar el plugin de RVIZ y ese usa JointTrajectoryController
+{ } Nota 2: Usa un publish_rate alto (125 Hz), lo que puede mejorar la suavidad en simulación. Se puede usar un publish_rate más bajo (50 Hz), suficiente para pruebas, pero menos suave. Esto se ve en esta linea:
     publish_rate: &loop_hz 125 
 
 ### 5) Crear Modelos SDF de Objetos
