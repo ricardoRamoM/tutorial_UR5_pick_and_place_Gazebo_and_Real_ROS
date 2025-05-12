@@ -859,70 +859,70 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 ### 7) Crear Launches de Simulación y Planificación
 - Hacer los siguientes 2 archivos launch en una nueva carpeta en ~/catkin_ws_1/src/ur5_v1/launch
 	- ur5_gazebo_1.launch
-		→ Gazebo con UR5 corriendo
-		→ Publica /robot_description, /tf, /joint_states
-		→ Carga controladores
+		- → Gazebo con UR5 corriendo
+		- → Publica /robot_description, /tf, /joint_states
+		- → Carga controladores
 
-            <?xml version="1.0"?>
-            <launch>
+                <?xml version="1.0"?>
+                <launch>
 
-                <!-- Cargar el modelo UR5 -->
-                <param name="robot_description" command="$(find xacro)/xacro '$(find ur5_v1)/urdf/ur5_1.xacro'" /> 
-            
-                <!--Spawn Robot in Gazebo-->
-                <!-- Set the position in empty world of the base link-->
-                <arg name="x" default="0" />
-                <arg name="y" default="0" />
-                <arg name="z" default="0.985" />
-
-                <!-- put world file as argument-->
-                <arg name="world_file" default = "$(find ur5_v1)/worlds/my_custom_world.world" />
-
-                <!-- Lanzar Gazebo con tu mundo -->
-                <include file="$(find gazebo_ros)/launch/empty_world.launch">
-                    <arg name="paused" value="false"/>
-                    <arg name="gui" value="true"/>
-                    <arg name="use_sim_time" value="true"/>
-                    <arg name="world_name" value="$(arg world_file)"/>
-                </include>
-
-                <!-- Publicar estados del robot -->
-                <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+                    <!-- Cargar el modelo UR5 -->
+                    <param name="robot_description" command="$(find xacro)/xacro '$(find ur5_v1)/urdf/ur5_1.xacro'" /> 
                 
-                <!-- Spawn the robot using the package gazebo_ros-->
-                <node name="spawn_the_robot" pkg="gazebo_ros" type="spawn_model"  output="screen" args="-urdf -param robot_description -model ur5 -x $(arg x) -y $(arg y) -z $(arg z)" />  
+                    <!--Spawn Robot in Gazebo-->
+                    <!-- Set the position in empty world of the base link-->
+                    <arg name="x" default="0" />
+                    <arg name="y" default="0" />
+                    <arg name="z" default="0.985" />
 
-                <!-- Controladores -->
-                <!-- Cargar Controladores -->
-                <rosparam file="$(find ur5_v1)/config/ur5_controllers.yaml" command="load"/>
-            
-                <!-- Cargar the node Controller manager -->
-                <node name="controller_spawner" pkg="controller_manager" type="spawner"
-                args="joint_state_controller 
-                eff_joint_traj_controller 
-                --timeout 60 " />
+                    <!-- put world file as argument-->
+                    <arg name="world_file" default = "$(find ur5_v1)/worlds/my_custom_world.world" />
 
-            </launch>
+                    <!-- Lanzar Gazebo con tu mundo -->
+                    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+                        <arg name="paused" value="false"/>
+                        <arg name="gui" value="true"/>
+                        <arg name="use_sim_time" value="true"/>
+                        <arg name="world_name" value="$(arg world_file)"/>
+                    </include>
+
+                    <!-- Publicar estados del robot -->
+                    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+                    
+                    <!-- Spawn the robot using the package gazebo_ros-->
+                    <node name="spawn_the_robot" pkg="gazebo_ros" type="spawn_model"  output="screen" args="-urdf -param robot_description -model ur5 -x $(arg x) -y $(arg y) -z $(arg z)" />  
+
+                    <!-- Controladores -->
+                    <!-- Cargar Controladores -->
+                    <rosparam file="$(find ur5_v1)/config/ur5_controllers.yaml" command="load"/>
+                
+                    <!-- Cargar the node Controller manager -->
+                    <node name="controller_spawner" pkg="controller_manager" type="spawner"
+                    args="joint_state_controller 
+                    eff_joint_traj_controller 
+                    --timeout 60 " />
+
+                </launch>
 
     - ur5_moveit_with_rviz_1.launch
-		→ Lanzas ur5_moveit_with_rviz.launch → MoveIt + remapeo + RViz
-        
-            <launch>
-            <arg name="sim" default="true" />
-            <arg name="debug" default="false" />
+		- → Lanzas ur5_moveit_with_rviz.launch → MoveIt + remapeo + RViz
 
-            <!-- Remapea trajectory controller para Gazebo -->
-            <remap if="$(arg sim)" from="/scaled_pos_joint_traj_controller/follow_joint_trajectory" to="/eff_joint_traj_controller/follow_joint_trajectory"/>
+                <launch>
+                <arg name="sim" default="true" />
+                <arg name="debug" default="false" />
 
-            <!-- Lanza MoveIt  con la config de Universal Robots-->
-            <include file="$(find ur5_moveit_config)/launch/move_group.launch">
-                <arg name="debug" value="$(arg debug)" />
-            </include>
+                <!-- Remapea trajectory controller para Gazebo -->
+                <remap if="$(arg sim)" from="/scaled_pos_joint_traj_controller/follow_joint_trajectory" to="/eff_joint_traj_controller/follow_joint_trajectory"/>
 
-            <!-- Lanza RViz con la configuración de RVIZ guardada en config -->
-            <node name="rviz" pkg="rviz" type="rviz" output="screen"
-                    args="-d $(find ur5_v1)/config/config.rviz" />
-            </launch>
+                <!-- Lanza MoveIt  con la config de Universal Robots-->
+                <include file="$(find ur5_moveit_config)/launch/move_group.launch">
+                    <arg name="debug" value="$(arg debug)" />
+                </include>
+
+                <!-- Lanza RViz con la configuración de RVIZ guardada en config -->
+                <node name="rviz" pkg="rviz" type="rviz" output="screen"
+                        args="-d $(find ur5_v1)/config/config.rviz" />
+                </launch>
 
 ### 8) Spawnear Objetos Desde Launch
 
