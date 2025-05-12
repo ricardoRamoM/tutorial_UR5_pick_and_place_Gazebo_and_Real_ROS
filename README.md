@@ -1259,6 +1259,7 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 - Guardar el archivo: config.rviz . Nota: no crear un nuevo archivo.rviz, solo guardar el que ya teniamos
 
 - [ ] Código de joint_state_marker_rad.py: 
+
         #!/usr/bin/env python3
 
         import rospy
@@ -1325,6 +1326,7 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 
 
 - [ ] Código de joint_state_marker_deg.py:
+
         #!/usr/bin/env python3
 
         import rospy
@@ -1390,11 +1392,53 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
             JointStateMarker()
             rospy.spin()
 
+![qs_rad_RViz](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/qs_rad_RViz.png)
 
+![qs_deg_RViz](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/qs_deg_RViz.png)
 
 ### 14)  Incluir Todos los Scripts en el Launch de MoveIt + RViz
+- Crear nuevo launch con la ejecucion de los 4 scripts pasados en el launch de MoveIt + Rviz
+	- Crear un nuevo archivo llamado ur5_moveit_with_rviz_2.launch
+	- Añadir el siguiente codigo en ese archivo
 
+            <launch>
+            <arg name="sim" default="true" />
+            <arg name="debug" default="false" />
 
+            <!-- Remapea trajectory controller para Gazebo -->
+            <remap if="$(arg sim)" from="/scaled_pos_joint_traj_controller/follow_joint_trajectory" to="/eff_joint_traj_controller/follow_joint_trajectory"/>
+
+            <!-- Lanza MoveIt  con la config de Universal Robots-->
+            <include file="$(find ur5_moveit_config)/launch/move_group.launch">
+                <arg name="debug" value="$(arg debug)" />
+            </include>
+
+            <!-- Lanza RViz con la configuración de RVIZ guardada en config -->
+            <node name="rviz" pkg="rviz" type="rviz" output="screen"
+                    args="-d $(find ur5_v1)/config/config.rviz" />
+
+            <!--______________________________________________________________________-->
+            <!-- Nodo RPY en radianes -->
+            <node name="rpy_marker_rad" pkg="ur5_v1" type="rpy_marker_rad.py" output="screen">
+                <param name="reference_frame" value="base_link"/>
+                <param name="target_frame" value="tool0"/>
+            </node>
+
+            <!-- Nodo RPY en grados -->
+            <node name="rpy_marker_deg" pkg="ur5_v1" type="rpy_marker_deg.py" output="screen">
+                <param name="reference_frame" value="base_link"/>
+                <param name="target_frame" value="tool0"/>
+            </node>
+
+            <!-- Nodo joint_state_marker_rad -->
+            <node name="joint_state_marker_rad" pkg="ur5_v1" type="joint_state_marker_rad.py" output="screen" />
+
+            <!-- Nodo joint_state_marker_deg -->
+            <node name="joint_state_marker_deg" pkg="ur5_v1" type="joint_state_marker_deg.py" output="screen" />
+
+            </launch>
+
+### 15)             
 
 -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 ### 
