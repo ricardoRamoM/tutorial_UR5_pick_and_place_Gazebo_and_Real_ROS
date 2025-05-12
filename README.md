@@ -3,8 +3,7 @@
 Este tutorial te guía paso a paso para simular y ejecutar una tarea de pick and place utilizando el brazo robótico UR5 y el gripper Robotiq 2F-85, integrando herramientas como Gazebo, MoveIt, RViz y Python en ROS Noetic sobre Ubuntu 20.04. Comenzarás configurando un entorno de simulación funcional y terminarás controlando el robot físico desde una computadora remota, aplicando los mismos scripts desarrollados en el entorno virtual. Ideal para quienes buscan unir teoría, simulación y práctica real en robótica colaborativa.
 
 ---
-
-<h2 id="indice">📑 Índice</h2>
+## 📑 Índice
 
 1. [📋 I - Requisitos Previos](#-i--requisitos-previos)
 2. [📖 II - Introducción](#-ii--introducción)
@@ -15,14 +14,14 @@ Este tutorial te guía paso a paso para simular y ejecutar una tarea de pick and
    - [4. Herramientas adicionales](#4-instalación-de-herramientas-adicionales)
    - [5. Python y dependencias](#5-python-y-dependencias-ros-para-python)
    - [6. Plugin Mimic para el Gripper](#6-instalación-del-plugin-mimic-para-gazebo-robotiq-gripper)
-4. [🛠️ IV - Configuración del Entorno](#configuracion-entorno)
+4. [🛠️ IV - Configuración del Entorno](#-iv--configuración-del-entorno)
    - [1. catkin_ws](#1-creación-y-configuración-del-catkin_ws)
    - [2. Repositorios necesarios](#2-clonado-de-repositorios-ur5-robotiq-moveit-config-etc)
    - [3. Compilación con catkin_make](#3-compilación-con-catkin_make)
    - [4. Sourcing del workspace](#4-sourcing-del-workspace)
    - [5. Crear tu propio paquete](#5-crear-tu-propio-paquete-package)
    - [6. Probar simulación básica](#6-probar-simulación-básica-ur5-y-gripper)
-5. [🧪 V - Simulación del Pick and Place](#-v--simulación-del-pick-and-place)
+5. [🧪 V - Simulación e Integración del Robot UR5 + Gripper](#-v--simulación-e-integración-del-robot-ur5--gripper)
    - [1. Visualización del robot con XACRO](#1-visualizar-el-robot-en-rviz-con-archivo-xacro)
    - [2. Crear Launch para RViz](#2-crear-launch-para-mostrar-el-robot-en-rviz)
    - [3. Configurar visualización](#3-configurar-visualización-en-rviz-y-guardar-configuración)
@@ -48,11 +47,9 @@ Este tutorial te guía paso a paso para simular y ejecutar una tarea de pick and
    - [23. Ajustar rotación inicial del gripper en eef.xacro](#23-ajustar-rotación-inicial-del-gripper-en-eefxacro)
    - [24. Crear launch file para spawn del robot y objetos en Gazebo](#24-crear-launch-file-para-spawn-del-robot-y-objetos-en-gazebo)
    - [25. Crear script en Python para mover el UR5](#25-crear-script-en-python-para-mover-el-ur5)
-6. [🔌 VI - Conexión con el Robot Físico UR5](#-vi--conexión-con-el-robot-físico-ur5)
-   - [1. Configuración de red y comunicación con el UR5](#1-configuración-de-red-y-comunicación-con-el-ur5)
-   - [2. Lanzar el robot real con MoveIt](#2-lanzar-el-robot-real-con-moveit)
-   - [3. Adaptar y ejecutar el script en el robot físico](#3-adaptar-y-ejecutar-el-script-en-el-robot-físico)
-7. [🧩 VII - Estructura del Código y Explicación del Script](#-vii--estructura-del-código-y-explicación-del-script)
+6. [🐍 VI - Control del UR5 Simulado con Python y MoveIt](#-vi--control-del-ur5-simulado-con-python-y-moveit)
+   - [1. Crear script en Python para mover el UR5](#1-crear-script-en-python-para-mover-el-ur5)
+7. [🤖 VII - Ejecución en el Robot UR5 Físico](#-vii--ejecución-en-el-robot-ur5-físico)
    - [1. Desglose del script Python](#1-desglose-del-script-python)
    - [2. Comunicación de nodos y control de movimientos](#2-comunicación-de-nodos-y-control-de-movimientos)
 8. [✅ VIII - Conclusión](#-viii--conclusión)
@@ -177,9 +174,7 @@ Configurar Gazebo para encontrar el plugin:
     echo 'export GAZEBO_PLUGIN_PATH=$GAZABO_PLUGIN_PATH:/usr/local/lib' >> ~/.bashrc
     source ~/.bashrc
 
-
-<h2 id="configuracion-entorno">🛠️ IV - Configuración del Entorno</h2>
-
+## 🛠️ IV-Configuración del entorno 
 ### 1. Creación y configuración del catkin_ws_1
 Si aún no tienes un workspace de ROS configurado, sigue estos pasos:
 
@@ -298,7 +293,7 @@ Para verificar la simulación del gripper en RVIZ en una nueva terminal ejecutam
 Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + C
 
 
-## 🧪 V-Simulación del Pick and Place
+## 🧪 V-Simulación e Integración del Robot UR5 + Gripper
 
 ### 1) Visualizar el Robot en RViz con Archivo XACRO
 - Crear la carpeta urdf (Unified Robot Description Format) dentro de la ruta ~/catkin_ws_1/src/ur5_v1
@@ -1521,7 +1516,7 @@ Nota: Para terminal la ejecución, presiona en cada terminal las teclas: ctrl + 
 ![ur5_gripper_RViz](https://github.com/ricardoRamoM/tutorial_UR5_pick_and_place_Gazebo_and_Real_ROS/blob/master/media/images/ur5_gripper_RViz.png)
 
 ### 17) Generar paquete MoveIt para UR5 con gripper
-- En esta ruta: /catkin_ws_7/src, crear esta carpeta: ur_gripper_moveit_config	
+- En esta ruta: /catkin_ws_1/src, crear esta carpeta: ur_gripper_moveit_config	
 - Ejecutar en la terminal: roslaunch moveit_setup_assistant setup_assistant.launch
 	
 	- Create New MoveIt ConfigurationPackage 
@@ -1614,8 +1609,8 @@ Estos pasos corrigen errores comunes relacionados con el uso del plugin y la con
 Reemplazar plugin incorrecto en archivos URDF. 
 - Para ello abre y edita los siguientes archivos:
 
-    - /home/gazebo-ros/catkin_ws/src/ur_gripper_moveit_config/config/gazebo_ur5_robot.urdf
-    - /home/gazebo-ros/catkin_ws/src/robotiq_gripper/urdf/robotiq_85_gripper.transmission.xacro
+    - /home/gazebo-ros/catkin_ws_1/src/ur_gripper_moveit_config/config/gazebo_ur5_robot.urdf
+    - /home/gazebo-ros/catkin_ws_1/src/robotiq_gripper/urdf/robotiq_85_gripper.transmission.xacro
 
 - Busca y elimina todas las instancias del siguiente plugin incorrecto:
 
@@ -1627,8 +1622,8 @@ Reemplazar plugin incorrecto en archivos URDF.
 
 - Abre y edita los siguientes archivos:
 
-    - /home/gazebo-ros/catkin_ws/src/ur_gripper_moveit_config/config/gazebo_ur5_robot.urdf
-    - /home/gazebo-ros/catkin_ws/src/robotiq_gripper/urdf/robotiq_85_gripper.urdf.xacro
+    - /home/gazebo-ros/catkin_ws_1/src/ur_gripper_moveit_config/config/gazebo_ur5_robot.urdf
+    - /home/gazebo-ros/catkin_ws_1/src/robotiq_gripper/urdf/robotiq_85_gripper.urdf.xacro
 
 - Busca las líneas que definen los siguientes joints:
 
@@ -1658,7 +1653,7 @@ Ahora crearás un nuevo archivo de configuración para controlar el gripper **Ro
 
 - Haz una copia del archivo actual de controladores:
 
-    cd ~/catkin_ws/src/ur5_v1/config
+    cd ~/catkin_ws_1/src/ur5_v1/config
     cp ur5_controllers.yaml ur5_gripper_controllers.yaml
 
 - Abre ur5_gripper_controllers.yaml y añade al final del archivo el siguiente bloque de código:
@@ -1689,7 +1684,7 @@ Vamos a generar un nuevo `launch` que cargue el modelo del UR5 con el **gripper 
 
 - Ubícate en la carpeta de `launch` de tu paquete y crea una copia del archivo existente:
 
-    cd ~/catkin_ws/src/ur5_v1/launch
+    cd ~/catkin_ws_1/src/ur5_v1/launch
     cp ur5_gazebo_2.launch ur5_gripper_gazebo_1.launch
 
 - Cambiar el archivo .xacro (línea 5)
@@ -1836,7 +1831,7 @@ Vamos a simplificar los estados `open` y `close` de la garra eliminando los *joi
 
 - Abrir el archivo: 
 
-    /home/gazebo-ros/catkin_ws/src/ur_gripper_moveit_config/config/ur5_with_gripper.srdf
+    /home/gazebo-ros/catkin_ws_1/src/ur_gripper_moveit_config/config/ur5_with_gripper.srdf
 
 - Reemplazar el bloque actual:
 
@@ -1868,7 +1863,7 @@ Para ajustar la orientación con la que el *gripper* se monta inicialmente al UR
 
 - Archivo a editar: 
 
-    ~/catkin_ws/src/ur5_v1/urdf/eef.xacro
+    ~/catkin_ws_1/src/ur5_v1/urdf/eef.xacro
 
 - Busca la línea que se encarga del posicionamiento y orientación inicial del gripper:
 
@@ -1891,7 +1886,7 @@ Unificar el lanzamiento del robot con gripper y los objetos de simulación en un
 
 - Ruta del nuevo archivo:
 
-    ~/catkin_ws/src/ur5_v1/launch/ur5_gripper_gazebo_add_objects_1.launch
+    ~/catkin_ws_1/src/ur5_v1/launch/ur5_gripper_gazebo_add_objects_1.launch
 
 - Pegar el siguiente código en el nuevo archivo:
 
@@ -1922,10 +1917,13 @@ A partir de ahora, usaremos el archivo ur5_gripper_gazebo_add_objects_1.launch c
 
 Después, abrimos otra terminal y ejecutamos ur5_gripper_moveit_with_rviz_1.launch para usar MoveIt con RViz.
 
-### 25) Crear script en Python para mover el UR5
+## 🧩 VI-Control del UR5 Simulado con Python y MoveIt
+
+### 1) Crear script en Python para mover el UR5
 
 
-### 32. ▶️ Ejecución del Script de Pick & Place
+
+### 2) ▶️ Ejecución del Script de Pick & Place
 
 En terminal:
 
@@ -1936,21 +1934,13 @@ Luego, en otra terminal:
     rosrun <tu_paquete> ur5_pick_and_place.py
 
 
-## 🤖 VI-Conexión con el Robot Físico UR5
+## 🤖 VII-Ejecución en el Robot UR5 Físico
 
     Configuración de red y comunicación con el UR5
 
     Lanzar el robot real con MoveIt
 
     Adaptar y ejecutar el mismo script Python en el robot físico
-
-## 🧩 VII-Estructura del Código y Explicación del Script
-
-    Desglose del script Python
-
-    Cómo se comunican los nodos, controlan los movimientos y se integran con MoveIt
-
-
 
 
 
